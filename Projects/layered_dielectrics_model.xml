@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<ContinuousStructure CoordSystem="0">
+    <RectilinearGrid DeltaUnit="1" CoordSystem="0">
+        <XLines Qty="0" />
+        <YLines Qty="0" />
+        <ZLines Qty="0" />
+    </RectilinearGrid>
+    <BackgroundMaterial Epsilon="1" Mue="1" Kappa="0" Sigma="0" />
+    <ParameterSet>
+        <Parameter Type="Const" name="x" Sweep="1" value="1" />
+        <Parameter Type="Const" name="y" Sweep="1" value="1" />
+        <Parameter Type="Const" name="z1" Sweep="1" value="3" />
+        <Parameter Type="Const" name="z2" Sweep="1" value="8" />
+        <Parameter Type="Const" name="z3" Sweep="1" value="20" />
+    </ParameterSet>
+    <Properties>
+        <Material ID="0" Name="epsilon1" Isotropy="1">
+            <FillColor R="41" G="35" B="190" a="123" />
+            <EdgeColor R="41" G="35" B="190" a="123" />
+            <Primitives>
+                <Box Priority="0">
+                    <Transformation />
+                    <P1 X="0.000000e+00" Y="0.000000e+00" Z="0.000000e+00" />
+                    <P2 X="x" Y="y" Z="z1" />
+                </Box>
+            </Primitives>
+            <Property Epsilon="1.000000e+00,1.000000e+00,1.000000e+00" Mue="1.000000e+00,1.000000e+00,1.000000e+00" Kappa="0.000000e+00,0.000000e+00,0.000000e+00" Sigma="0.000000e+00,0.000000e+00,0.000000e+00" Density="0.000000e+00" />
+            <Weight Epsilon="1.000000e+00,1.000000e+00,1.000000e+00" Mue="1.000000e+00,1.000000e+00,1.000000e+00" Kappa="1.000000e+00,1.000000e+00,1.000000e+00" Sigma="1.000000e+00,1.000000e+00,1.000000e+00" Density="1.000000e+00" />
+        </Material>
+        <Material ID="1" Name="epsilon2" Isotropy="1">
+            <FillColor R="235" G="179" B="166" a="123" />
+            <EdgeColor R="235" G="179" B="166" a="123" />
+            <Primitives>
+                <Box Priority="0">
+                    <Transformation />
+                    <P1 X="0.000000e+00" Y="0.000000e+00" Z="z1" />
+                    <P2 X="x" Y="y" Z="z1+z2" />
+                </Box>
+            </Primitives>
+            <Property Epsilon="1.000000e+00,1.000000e+00,1.000000e+00" Mue="1.000000e+00,1.000000e+00,1.000000e+00" Kappa="0.000000e+00,0.000000e+00,0.000000e+00" Sigma="0.000000e+00,0.000000e+00,0.000000e+00" Density="0.000000e+00" />
+            <Weight Epsilon="1.000000e+00,1.000000e+00,1.000000e+00" Mue="1.000000e+00,1.000000e+00,1.000000e+00" Kappa="1.000000e+00,1.000000e+00,1.000000e+00" Sigma="1.000000e+00,1.000000e+00,1.000000e+00" Density="1.000000e+00" />
+        </Material>
+        <Material ID="2" Name="epsilon3" Isotropy="1">
+            <FillColor R="36" G="94" B="13" a="123" />
+            <EdgeColor R="36" G="94" B="13" a="123" />
+            <Primitives>
+                <Box Priority="0">
+                    <Transformation />
+                    <P1 X="0.000000e+00" Y="0.000000e+00" Z="z1+z2" />
+                    <P2 X="x" Y="y" Z="z1+z2+z3" />
+                </Box>
+            </Primitives>
+            <Property Epsilon="1.000000e+00,1.000000e+00,1.000000e+00" Mue="1.000000e+00,1.000000e+00,1.000000e+00" Kappa="0.000000e+00,0.000000e+00,0.000000e+00" Sigma="0.000000e+00,0.000000e+00,0.000000e+00" Density="0.000000e+00" />
+            <Weight Epsilon="1.000000e+00,1.000000e+00,1.000000e+00" Mue="1.000000e+00,1.000000e+00,1.000000e+00" Kappa="1.000000e+00,1.000000e+00,1.000000e+00" Sigma="1.000000e+00,1.000000e+00,1.000000e+00" Density="1.000000e+00" />
+        </Material>
+        <Excitation ID="3" Name="wp1" Number="0" Frequency="0.000000e+00" Delay="0.000000e+00" Type="2" Excite="0.000000e+00,0.000000e+00,0.000000e+00" PropDir="0.000000e+00,0.000000e+00,0.000000e+00">
+            <FillColor R="18" G="77" B="200" a="255" />
+            <EdgeColor R="18" G="77" B="200" a="255" />
+            <Primitives />
+            <Weight X="1.000000e+00" Y="1.000000e+00" Z="1.000000e+00" />
+        </Excitation>
+    </Properties>
+</ContinuousStructure>
