@@ -125,34 +125,34 @@ if fdtd_test:
     
     
     layer1 = CSX.AddDebyeMaterial( 'skin_debye' , epsilon=skin_debye[0]*np.ones(3), order=1)
-    layer1.SetDispersiveMaterialWeightDir('eps_delta', 0, 0, skin_debye[1])
-    layer1.SetDispersiveMaterialWeightDir('eps_delta', 0, 1, skin_debye[1])
-    layer1.SetDispersiveMaterialWeightDir('eps_delta', 0, 2, skin_debye[1])
-    layer1.SetDispersiveMaterialWeightDir('eps_relax', 0, 0, skin_debye[2])
-    layer1.SetDispersiveMaterialWeightDir('eps_relax', 0, 1, skin_debye[2])
-    layer1.SetDispersiveMaterialWeightDir('eps_relax', 0, 2, skin_debye[2]) 
+    layer1.SetDispersiveMaterialPropertyDir('eps_delta', 0, 0, skin_debye[1])
+    layer1.SetDispersiveMaterialPropertyDir('eps_delta', 0, 1, skin_debye[1])
+    layer1.SetDispersiveMaterialPropertyDir('eps_delta', 0, 2, skin_debye[1])
+    layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 0, skin_debye[2])
+    layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 1, skin_debye[2])
+    layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, skin_debye[2]) 
     start = [0, 0, -1]
     stop  = [x, y, z1]
     layer1.AddBox(start, stop)
 
     layer2 = CSX.AddDebyeMaterial( 'fat_debye' , epsilon=fat_debye[0]*np.ones(3), order=1)
-    layer2.SetDispersiveMaterialWeightDir('eps_delta', 0, 0, fat_debye[1])
-    layer2.SetDispersiveMaterialWeightDir('eps_delta', 0, 1, fat_debye[1])
-    layer2.SetDispersiveMaterialWeightDir('eps_delta', 0, 2, fat_debye[1])
-    layer2.SetDispersiveMaterialWeightDir('eps_relax', 0, 0, fat_debye[2])
-    layer2.SetDispersiveMaterialWeightDir('eps_relax', 0, 1, fat_debye[2])
-    layer2.SetDispersiveMaterialWeightDir('eps_relax', 0, 2, fat_debye[2])     
+    layer2.SetDispersiveMaterialPropertyDir('eps_delta', 0, 0, fat_debye[1])
+    layer2.SetDispersiveMaterialPropertyDir('eps_delta', 0, 1, fat_debye[1])
+    layer2.SetDispersiveMaterialPropertyDir('eps_delta', 0, 2, fat_debye[1])
+    layer2.SetDispersiveMaterialPropertyDir('eps_relax', 0, 0, fat_debye[2])
+    layer2.SetDispersiveMaterialPropertyDir('eps_relax', 0, 1, fat_debye[2])
+    layer2.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, fat_debye[2])     
     start = [0, 0, z1]
     stop  = [x, y, z1+z2]
     layer2.AddBox(start, stop)
 
     layer3 = CSX.AddDebyeMaterial( 'muscle_debye' , epsilon=muscle_debye[0]*np.ones(3), order=1)
-    layer3.SetDispersiveMaterialWeightDir('eps_delta', 0, 0, muscle_debye[1])
-    layer3.SetDispersiveMaterialWeightDir('eps_delta', 0, 1, muscle_debye[1])
-    layer3.SetDispersiveMaterialWeightDir('eps_delta', 0, 2, muscle_debye[1])
-    layer3.SetDispersiveMaterialWeightDir('eps_relax', 0, 0, muscle_debye[2])
-    layer3.SetDispersiveMaterialWeightDir('eps_relax', 0, 1, muscle_debye[2])
-    layer3.SetDispersiveMaterialWeightDir('eps_relax', 0, 2, muscle_debye[2])     
+    layer3.SetDispersiveMaterialPropertyDir('eps_delta', 0, 0, muscle_debye[1])
+    layer3.SetDispersiveMaterialPropertyDir('eps_delta', 0, 1, muscle_debye[1])
+    layer3.SetDispersiveMaterialPropertyDir('eps_delta', 0, 2, muscle_debye[1])
+    layer3.SetDispersiveMaterialPropertyDir('eps_relax', 0, 0, muscle_debye[2])
+    layer3.SetDispersiveMaterialPropertyDir('eps_relax', 0, 1, muscle_debye[2])
+    layer3.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, muscle_debye[2])     
     start = [0, 0, z1+z2]
     stop  = [x, y, z1+z2+z3]
     layer3.AddBox(start, stop)
@@ -184,10 +184,13 @@ if fdtd_test:
     ### Run the simulation
     if fdtd_test_debug:  # debugging only
         CSX_file = os.path.join(sim_path, 'layered_dielectrics.xml')
+        CSX_file2 = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'layered_dielectrics.xml')
         if not os.path.exists(sim_path):
             os.mkdir(sim_path)
         CSX.Write2XML(CSX_file)
+        CSX.Write2XML(CSX_file2)
         from CSXCAD import AppCSXCAD_BIN
+        # NOTE: Change the path to AppCSXCAD_BIN in CSXCAD/__init__.py if needed to "bin/AppCSXCAD"!
         os.system(AppCSXCAD_BIN + ' "{}"'.format(CSX_file))
 
     if not post_proc_only:
