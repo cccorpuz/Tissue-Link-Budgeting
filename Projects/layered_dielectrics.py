@@ -20,17 +20,6 @@ hfss_test = 0
 theo_test = 1
 ################################
 
-
-#### Debye parameter function calculation ####
-def DebyeParameters(eps_f1, eps_f2, tand_1, tand_2, omega_1, omega_2):
-    eps_s = eps_f1
-    s_f1 = omega_1*EPS0*eps_f1*tand_1
-    s_f2 = omega_2*EPS0*eps_f2*tand_2 - s_f1
-    t_relax = EPS0 * (np.abs(eps_f1-eps_f2) / np.abs(s_f2-s_f1))
-    eps_inf = eps_s - np.abs(eps_s - eps_f2) * ((1+(omega_2*t_relax)**2)/(omega_2*t_relax)**2)
-    eps_delta = eps_s - eps_inf
-    return [eps_inf, eps_delta, t_relax]
-
 # Sweep Variables
 f_max = 18e9
 f_start = 1e9
@@ -50,9 +39,9 @@ z2 = 8
 z3 = 20
 
 # Relative Permittivities
-er1 = 32.5
-er2 = 4.7
-er3 = 44.5
+er1 = 40.936
+er2 = 5.447
+er3 = 54.811
 
 # Relative Permeabilities
 ur1 = 1
@@ -60,9 +49,31 @@ ur2 = 1
 ur3 = 1
 
 # Conductivities/Dielectric Loss Tangent
-s1 = 6.6
-s2 = 0.5
-s3 = 8.8
+s1 = 0
+s2 = 0
+s3 = 0
+
+#### Debye parameter function calculation ####
+def DebyeParameters(eps_f1, eps_f2, tand_1, tand_2, omega_1, omega_2):
+    eps_s = eps_f1
+    s_f1 = omega_1*EPS0*eps_f1*tand_1
+    s_f2 = omega_2*EPS0*eps_f2*tand_2 - s_f1
+    t_relax = EPS0 * (np.abs(eps_f1-eps_f2) / np.abs(s_f2-s_f1))
+    eps_inf = eps_s - np.abs(eps_s - eps_f2) * ((1+(omega_2*t_relax)**2)/(omega_2*t_relax)**2)
+    eps_delta = eps_s - eps_inf
+    return [eps_inf, eps_delta, t_relax]
+
+def FirstOrderDebyeEquationEPS(eps_f1, eps_f2, tand_1, tand_2, omega_1, omega_2, s_DC):
+    parameters = DebyeParameters(eps_f1, eps_f2, tand_1, tand_2, omega_1, omega_2)
+    omega = angularf
+    return parameters[0] + parameters[1] / (1+1j*omega*parameters[2]) + s_DC/(1j*omega*EPS0)
+
+def FirstOrderDebyeEquationCOND(eps_f1, eps_f2, tand_1, tand_2, omega_1, omega_2, s_DC):
+    eps_s = eps_f1
+    parameters = DebyeParameters(eps_f1, eps_f2, tand_1, tand_2, omega_1, omega_2)
+    omega = angularf
+    return s_DC + (omega**2*EPS0*parameters[2]*(eps_s-parameters[0]))/(1+(omega*parameters[2])**2)
+
 
 #########################################################
 ########## START openEMS FDTD Simulation Results ##########
@@ -77,7 +88,7 @@ if fdtd_test:
     FDTD = openEMS(NrTS=3e5, EndCriteria=1e-5)
     # FDTD = openEMS(NrTS=5e5)
     FDTD.SetGaussExcite(0.5*(f_start+f_stop),0.5*(f_stop-f_start))
-    FDTD.SetBoundaryCond( [ 'PEC', 'PEC', 'PMC', 'PMC', 'PML_8', 'PML_8' ] )
+    FDTD.SetBoundaryCond( [ 'PEC', 'PEC', 'PMC', 'PMC', 'MUR', 'MUR' ] )
 
     # Setup geom & mesh
     CSX = ContinuousStructure()
@@ -99,43 +110,49 @@ if fdtd_test:
 
     # Skin
     skin_debye = DebyeParameters(40.936, 23.649, 0.3951, 0.72531, angularf[0], angularf[len(angularf)-1])
+    er1 = FirstOrderDebyeEquationEPS(40.936, 23.649, 0.3951, 0.72531, angularf[0], angularf[len(angularf)-1], 0)
+    s1 = FirstOrderDebyeEquationCOND(40.936, 23.649, 0.3951, 0.72531, angularf[0], angularf[len(angularf)-1], 0)
 
     # Fat
     fat_debye = DebyeParameters(5.447, 4.0997, 0.17656, 0.27615, angularf[0], angularf[len(angularf)-1])
+    er2 = FirstOrderDebyeEquationEPS(5.447, 4.0997, 0.17656, 0.27615, angularf[0], angularf[len(angularf)-1], 0)
+    s2 = FirstOrderDebyeEquationCOND(5.447, 4.0997, 0.17656, 0.27615, angularf[0], angularf[len(angularf)-1], 0)
 
     # Muscle
     muscle_debye = DebyeParameters(54.811, 32.98, 0.3208, 0.6682, angularf[0], angularf[len(angularf)-1])
+    er3 = FirstOrderDebyeEquationEPS(54.811, 32.98, 0.3208, 0.6682, angularf[0], angularf[len(angularf)-1], 0)
+    s3 = FirstOrderDebyeEquationCOND(54.811, 32.98, 0.3208, 0.6682, angularf[0], angularf[len(angularf)-1], 0)
     
     
-    layer1 = CSX.AddDebyeMaterial( 'skin_debye' , epsilon=40.936*np.ones(3), order=1)
-    layer1.SetDispersiveMaterialPropertyDir('eps_delta', 0, 0, skin_debye[1])
-    layer1.SetDispersiveMaterialPropertyDir('eps_delta', 0, 1, skin_debye[1])
-    layer1.SetDispersiveMaterialPropertyDir('eps_delta', 0, 2, skin_debye[1])
-    layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 0, skin_debye[2])
-    layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 1, skin_debye[2])
-    layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, skin_debye[2]) 
+    layer1 = CSX.AddDebyeMaterial( 'skin_debye' , epsilon=skin_debye[0]*np.ones(3), order=1)
+    layer1.SetDispersiveMaterialWeightDir('eps_delta', 0, 0, skin_debye[1])
+    layer1.SetDispersiveMaterialWeightDir('eps_delta', 0, 1, skin_debye[1])
+    layer1.SetDispersiveMaterialWeightDir('eps_delta', 0, 2, skin_debye[1])
+    layer1.SetDispersiveMaterialWeightDir('eps_relax', 0, 0, skin_debye[2])
+    layer1.SetDispersiveMaterialWeightDir('eps_relax', 0, 1, skin_debye[2])
+    layer1.SetDispersiveMaterialWeightDir('eps_relax', 0, 2, skin_debye[2]) 
     start = [0, 0, -1]
     stop  = [x, y, z1]
     layer1.AddBox(start, stop)
 
-    layer2 = CSX.AddDebyeMaterial( 'fat_debye' , epsilon=5.447*np.ones(3), order=1)
-    layer2.SetDispersiveMaterialPropertyDir('eps_delta', 0, 0, fat_debye[1])
-    layer2.SetDispersiveMaterialPropertyDir('eps_delta', 0, 1, fat_debye[1])
-    layer2.SetDispersiveMaterialPropertyDir('eps_delta', 0, 2, fat_debye[1])
-    layer2.SetDispersiveMaterialPropertyDir('eps_relax', 0, 0, fat_debye[2])
-    layer2.SetDispersiveMaterialPropertyDir('eps_relax', 0, 1, fat_debye[2])
-    layer2.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, fat_debye[2])     
+    layer2 = CSX.AddDebyeMaterial( 'fat_debye' , epsilon=fat_debye[0]*np.ones(3), order=1)
+    layer2.SetDispersiveMaterialWeightDir('eps_delta', 0, 0, fat_debye[1])
+    layer2.SetDispersiveMaterialWeightDir('eps_delta', 0, 1, fat_debye[1])
+    layer2.SetDispersiveMaterialWeightDir('eps_delta', 0, 2, fat_debye[1])
+    layer2.SetDispersiveMaterialWeightDir('eps_relax', 0, 0, fat_debye[2])
+    layer2.SetDispersiveMaterialWeightDir('eps_relax', 0, 1, fat_debye[2])
+    layer2.SetDispersiveMaterialWeightDir('eps_relax', 0, 2, fat_debye[2])     
     start = [0, 0, z1]
     stop  = [x, y, z1+z2]
     layer2.AddBox(start, stop)
 
-    layer3 = CSX.AddDebyeMaterial( 'muscle_debye' , epsilon=54.811*np.ones(3), order=1)
-    layer3.SetDispersiveMaterialPropertyDir('eps_delta', 0, 0, muscle_debye[1])
-    layer3.SetDispersiveMaterialPropertyDir('eps_delta', 0, 1, muscle_debye[1])
-    layer3.SetDispersiveMaterialPropertyDir('eps_delta', 0, 2, muscle_debye[1])
-    layer3.SetDispersiveMaterialPropertyDir('eps_relax', 0, 0, muscle_debye[2])
-    layer3.SetDispersiveMaterialPropertyDir('eps_relax', 0, 1, muscle_debye[2])
-    layer3.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, muscle_debye[2])     
+    layer3 = CSX.AddDebyeMaterial( 'muscle_debye' , epsilon=muscle_debye[0]*np.ones(3), order=1)
+    layer3.SetDispersiveMaterialWeightDir('eps_delta', 0, 0, muscle_debye[1])
+    layer3.SetDispersiveMaterialWeightDir('eps_delta', 0, 1, muscle_debye[1])
+    layer3.SetDispersiveMaterialWeightDir('eps_delta', 0, 2, muscle_debye[1])
+    layer3.SetDispersiveMaterialWeightDir('eps_relax', 0, 0, muscle_debye[2])
+    layer3.SetDispersiveMaterialWeightDir('eps_relax', 0, 1, muscle_debye[2])
+    layer3.SetDispersiveMaterialWeightDir('eps_relax', 0, 2, muscle_debye[2])     
     start = [0, 0, z1+z2]
     stop  = [x, y, z1+z2+z3]
     layer3.AddBox(start, stop)
@@ -166,7 +183,7 @@ if fdtd_test:
 
     ### Run the simulation
     if fdtd_test_debug:  # debugging only
-        CSX_file = os.path.join(sim_path, 'rect_wg.xml')
+        CSX_file = os.path.join(sim_path, 'layered_dielectrics.xml')
         if not os.path.exists(sim_path):
             os.mkdir(sim_path)
         CSX.Write2XML(CSX_file)
@@ -232,14 +249,19 @@ if fdtd_test:
 #########################################################
 
 if theo_test:
+    ers = [er1, er2, er3]
+    ss = [s1, s2, s3]
 
     d = np.array([z1, z2, z3]) * unit
 
-    er = np.array([
-        er1*np.ones(num_points),
-        er2*np.ones(num_points),
-        er3*np.ones(num_points)
-    ])
+    if 0 and all(isinstance(ers, np.ndarray) for var in ers) and all(len(ers)==num_points for var in ers): 
+        er = np.array(ers)
+    else:
+        er = np.array([
+            er1*np.ones(num_points),
+            er2*np.ones(num_points),
+            er3*np.ones(num_points)
+        ])
     eps = er*EPS0
 
     ur = np.array([
@@ -249,11 +271,15 @@ if theo_test:
     ])
     mue = ur*MUE0
 
-    s = np.array([
-        s1*np.ones(num_points),
-        s2*np.ones(num_points),
-        s3*np.ones(num_points)
-    ])
+    if 0 and all(isinstance(ss, np.ndarray) for var in ss) and all(len(ss)==num_points for var in ss):
+        s = np.array(ss)
+    else:
+        s = np.array([
+            s1*np.ones(num_points),
+            s2*np.ones(num_points),
+            s3*np.ones(num_points)
+        ])
+
 
     alpha = angularf*np.sqrt(eps*mue)*np.sqrt(0.5*(np.sqrt(1+(s/(angularf*eps))**2)-1))
     beta  = angularf*np.sqrt(eps*mue)*np.sqrt(0.5*(np.sqrt(1+(s/(angularf*eps))**2)+1))
@@ -304,4 +330,13 @@ if fdtd_test and theo_test:
     # xlabel(r'frequency (MHz) $\rightarrow$')
     # legend()
 
+    show()
+elif theo_test:
+    ## Plot s-parameter
+    figure()
+    grid()
+    plot(f*1e-6,20*log10(abs(g)),'r--',linewidth=2, label='Theoretical '+'$S_{11}$')
+    legend();
+    ylabel('S-Parameter (dB)')
+    xlabel(r'frequency (MHz) $\rightarrow$')
     show()
