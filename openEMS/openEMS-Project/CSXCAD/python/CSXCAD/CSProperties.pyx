@@ -1478,7 +1478,7 @@ cdef class CSPropDebyeMaterial(CSPropDispersiveMaterial):
         else:
             CSPropDispersiveMaterial._GetDispersiveMaterialPropertyDir(self, prop_name, order, ny)
 
-    def _SetDispersiveMaterialPropertyDir(self, prop_name, order, ny, val):
+    def SetDispersiveMaterialPropertyDir(self, prop_name, order, ny, val):
         if prop_name=='eps_delta':
             (<_CSPropDebyeMaterial*>self.thisptr).SetEpsDelta(order, val, ny)
         elif prop_name=='eps_relax':

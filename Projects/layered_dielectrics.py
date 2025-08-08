@@ -74,6 +74,58 @@ def FirstOrderDebyeEquationCOND(eps_f1, eps_f2, tand_1, tand_2, omega_1, omega_2
     omega = angularf
     return s_DC + (omega**2*EPS0*parameters[2]*(eps_s-parameters[0]))/(1+(omega*parameters[2])**2)
 
+#### Calculating Theoretical S11 ####
+def theo_s11(ers, ss, urs, d, num_points):
+    if 0 and all(isinstance(ers, np.ndarray) for var in ers) and all(len(ers)==num_points for var in ers): 
+        er = np.array(ers)
+    else:
+        er = np.array([
+            er1*np.ones(num_points),
+            er2*np.ones(num_points),
+            er3*np.ones(num_points)
+        ])
+    eps = er*EPS0
+
+    urs = np.array([
+        ur1*np.ones(num_points),
+        ur2*np.ones(num_points),
+        ur3*np.ones(num_points)
+    ])
+    mue = urs*MUE0
+
+    if 0 and all(isinstance(ss, np.ndarray) for var in ss) and all(len(ss)==num_points for var in ss):
+        s = np.array(ss)
+    else:
+        s = np.array([
+            s1*np.ones(num_points),
+            s2*np.ones(num_points),
+            s3*np.ones(num_points)
+        ])
+
+
+    alpha = angularf*np.sqrt(eps*mue)*np.sqrt(0.5*(np.sqrt(1+(s/(angularf*eps))**2)-1))
+    beta  = angularf*np.sqrt(eps*mue)*np.sqrt(0.5*(np.sqrt(1+(s/(angularf*eps))**2)+1))
+    Z     = np.sqrt(1j*angularf*mue/(s+1j*angularf*eps))
+    gamma = alpha + 1j*beta
+
+    r = (Z[1:] - Z[:-1]) / (Z[1:] + Z[:-1])
+    r = np.round(r, 4)
+
+    temp = 1 / ((1-(-r[0,:]))*r[1,:]*np.exp(-2*gamma[1,:]*d[1]))
+
+    g1 = r[0,:] * np.exp(-2*gamma[0,:]*d[0])
+    g2 = r[1,:] * (1-r[0,:]**2) * np.exp(-2*(gamma[0,:]*d[0] + gamma[1,:]*d[1])) 
+    g = g1+g2
+    return g
+
+    # TODO: implement g_inf and g_x for infinite and cross term models?
+
+    # print((np.exp(-2*(gamma[0,:]*d[0] + gamma[1,:]*d[1]))/
+    #                                    ((1-(-r[0,:]))*r[1,:]*np.exp(-2*gamma[1,:]*d[1]))))
+    # figure()
+    # grid()
+    # plot(20*log10(np.abs(g)))
+    # show()
 
 #########################################################
 ########## START openEMS FDTD Simulation Results ##########
@@ -236,6 +288,7 @@ if fdtd_test:
 ########### START HFSS FEM Simulation Results ###########
 #########################################################
 
+
 #########################################################
 ############ END HFSS FEM Simulation Results ############
 #########################################################
@@ -254,61 +307,35 @@ if fdtd_test:
 ############## START Theoretical Results ################
 #########################################################
 
+# FDTD theoretical
 if theo_test:
     ers = [er1, er2, er3]
     ss = [s1, s2, s3]
-
-    d = np.array([z1, z2, z3]) * unit
-
-    if 0 and all(isinstance(ers, np.ndarray) for var in ers) and all(len(ers)==num_points for var in ers): 
-        er = np.array(ers)
-    else:
-        er = np.array([
-            er1*np.ones(num_points),
-            er2*np.ones(num_points),
-            er3*np.ones(num_points)
-        ])
-    eps = er*EPS0
-
-    ur = np.array([
+    urs = np.array([
         ur1*np.ones(num_points),
         ur2*np.ones(num_points),
         ur3*np.ones(num_points)
     ])
-    mue = ur*MUE0
 
-    if 0 and all(isinstance(ss, np.ndarray) for var in ss) and all(len(ss)==num_points for var in ss):
-        s = np.array(ss)
-    else:
-        s = np.array([
-            s1*np.ones(num_points),
-            s2*np.ones(num_points),
-            s3*np.ones(num_points)
-        ])
+    d = np.array([z1, z2, z3]) * unit
 
+    g = theo_s11(ers, ss, urs, d, num_points)
 
-    alpha = angularf*np.sqrt(eps*mue)*np.sqrt(0.5*(np.sqrt(1+(s/(angularf*eps))**2)-1))
-    beta  = angularf*np.sqrt(eps*mue)*np.sqrt(0.5*(np.sqrt(1+(s/(angularf*eps))**2)+1))
-    Z     = np.sqrt(1j*angularf*mue/(s+1j*angularf*eps))
-    gamma = alpha + 1j*beta
+# HFSS Theoretical
+if theo_test:
+    er2_hfss = 3.27541+2.17159/(1+5.0447e-21*f**2)
+    s2_hfss = 0.054066+(8.58077e-21*f**2)/(1+2.83483e-21*f**2)
+    ers = [er1, er2_hfss, er3]
+    ss = [s1, s2_hfss, s3]
+    urs = np.array([
+        ur1*np.ones(num_points),
+        ur2*np.ones(num_points),
+        ur3*np.ones(num_points)
+    ])
 
-    r = (Z[1:] - Z[:-1]) / (Z[1:] + Z[:-1])
-    r = np.round(r, 4)
+    d = np.array([z1, z2, z3]) * unit
 
-    temp = 1 / ((1-(-r[0,:]))*r[1,:]*np.exp(-2*gamma[1,:]*d[1]))
-
-    g1 = r[0,:] * np.exp(-2*gamma[0,:]*d[0])
-    g2 = r[1,:] * (1-r[0,:]**2) * np.exp(-2*(gamma[0,:]*d[0] + gamma[1,:]*d[1])) 
-    g = g1+g2
-
-    # TODO: implement g_inf and g_x for infinite and cross term models?
-
-    # print((np.exp(-2*(gamma[0,:]*d[0] + gamma[1,:]*d[1]))/
-    #                                    ((1-(-r[0,:]))*r[1,:]*np.exp(-2*gamma[1,:]*d[1]))))
-    # figure()
-    # grid()
-    # plot(20*log10(np.abs(g)))
-    # show()
+    g_hfss = theo_s11(ers, ss, urs, d, num_points)
 
 
 #########################################################
@@ -317,14 +344,41 @@ if theo_test:
 
 
 if fdtd_test and theo_test:
-    ## Plot s-parameter
-    figure()
-    plot(f*1e-6,20*log10(abs(s11)),'k-',linewidth=2, label='FDTD '+'$S_{11}$')
-    grid()
-    plot(f*1e-6,20*log10(abs(g)),'r--',linewidth=2, label='Theoretical '+'$S_{11}$')
-    legend();
-    ylabel('S-Parameter (dB)')
-    xlabel(r'frequency (MHz) $\rightarrow$')
+
+    # Plot S-parameter
+    try:
+        # Create a figure and axis for the plot
+        plt.figure(figsize=(10, 6))
+        plt.grid()
+
+        # Plot the FDTD data
+        plot(f*1e-9,20*log10(abs(s11)),'k-',linewidth=2, label='FDTD '+'$S_{11}$')
+
+
+        # Plot the theoretical data
+        plt.plot(f*1e-9,20*log10(abs(g)),'r--',linewidth=2, label='openEMS Theoretical '+'$S_{11}$')
+        plt.plot(f*1e-9,20*log10(abs(g_hfss)),'y:',linewidth=2, label='HFSS Theoretical '+'$S_{11}$')
+
+        # Plot the user-provided CSV data
+        df_new = pd.read_csv('C:/opt/Projects/1-18G_s11_1_fat_2_spdebye_07172025.csv')
+        df_new = df_new[df_new['Freq [GHz]'] <= 4.0]
+        plt.plot(df_new['Freq [GHz]'], df_new['dB(S(wp1,wp1)) []'], 'b-', linewidth=2, label='HFSS '+'$S_{11}$')
+        
+        # Set plot title and labels
+        plt.title('S-Parameter Plot (Limited to 4 GHz)', fontsize=16)
+        plt.xlabel('Frequency (GHz)', fontsize=12)
+        plt.ylabel('S-Parameter (dB)', fontsize=12)
+        # plt.xlim(df_new['Freq [GHz]'].min(), 4.0)
+        plt.grid(True)
+        plt.legend()
+
+        # Save the plot
+        plt.savefig('s_parameter_4ghz.png')
+
+        # Print confirmation
+        show()
+    except FileNotFoundError:
+        print("The CSV file '1-18G_s11_1_fat_2_spdebye_07172025.csv' was not found.")
 
     # ## Compare analytic and numerical wave-impedance
     # figure()
@@ -338,11 +392,34 @@ if fdtd_test and theo_test:
 
     show()
 elif theo_test:
-    ## Plot s-parameter
-    figure()
-    grid()
-    plot(f*1e-6,20*log10(abs(g)),'r--',linewidth=2, label='Theoretical '+'$S_{11}$')
-    legend();
-    ylabel('S-Parameter (dB)')
-    xlabel(r'frequency (MHz) $\rightarrow$')
-    show()
+
+    try:
+        # Create a figure and axis for the plot
+        plt.figure(figsize=(10, 6))
+        plt.grid()
+
+        # Plot the theoretical data
+        plt.plot(f*1e-9,20*log10(abs(g)),'r--',linewidth=2, label='openEMS Theoretical '+'$S_{11}$')
+        plt.plot(f*1e-9,20*log10(abs(g_hfss)),'y:',linewidth=2, label='HFSS Theoretical '+'$S_{11}$')
+
+        # Plot the user-provided CSV data
+        df_new = pd.read_csv('C:/opt/Projects/1-18G_s11_1_fat_2_spdebye_07172025.csv')
+        df_new = df_new[df_new['Freq [GHz]'] <= 4.0]
+        plt.plot(df_new['Freq [GHz]'], df_new['dB(S(wp1,wp1)) []'], 'b-', linewidth=2, label='HFSS '+'$S_{11}$')
+        
+        # Set plot title and labels
+        plt.title('S-Parameter Plot (Limited to 4 GHz)', fontsize=16)
+        plt.xlabel('Frequency (GHz)', fontsize=12)
+        plt.ylabel('S-Parameter (dB)', fontsize=12)
+        # plt.xlim(df_new['Freq [GHz]'].min(), 4.0)
+        plt.grid(True)
+        plt.legend()
+
+        # Save the plot
+        plt.savefig('s_parameter_4ghz.png')
+
+        # Print confirmation
+        show()
+    except FileNotFoundError:
+        print("The CSV file '1-18G_s11_1_fat_2_spdebye_07172025.csv' was not found.")
+
