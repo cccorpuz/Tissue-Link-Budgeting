@@ -21,7 +21,7 @@ theo_test = 1
 ################################
 
 # Sweep Variables
-f_max = 4e9
+f_max = 14e9
 f_start = 1e9
 f_stop = f_max
 
@@ -32,8 +32,8 @@ angularf = np.array(2*np.pi*f)
 
 # Model Variables
 unit = 1e-3 # mm units
-x = 20000 # 20m, FDTD
-y = 20000 # 20m, FDTD
+x = 10000 # 20m, FDTD
+y = 10000 # 20m, FDTD
 z1 = 8 # 5mm thick
 z2 = 3
 z3 = 20
@@ -137,7 +137,7 @@ if fdtd_test:
     post_proc_only = False
     print(sim_path)
 
-    FDTD = openEMS(NrTS=3e5, EndCriteria=1e-5)
+    FDTD = openEMS(NrTS=2e6, EndCriteria=1e-5)
     # FDTD = openEMS(NrTS=5e5)
     FDTD.SetGaussExcite(0.5*(f_start+f_stop),0.5*(f_stop-f_start))
     FDTD.SetBoundaryCond( [ 'PEC', 'PEC', 'PMC', 'PMC', 'MUR', 'MUR' ] )
@@ -150,15 +150,32 @@ if fdtd_test:
     mesh = CSX.GetGrid()
     mesh.SetDeltaUnit(unit)
 
-    resolution = C0/(f_max*np.sqrt(max(er1,er2,er3))) / unit / 100
-    print(resolution)
+    resolution = C0/(f_max*np.sqrt(max(er1,er2,er3))) / unit / 100  # 1/10 of wavelength in mm
+    print(f'Resolution: ${resolution} mm')
 
-    ## Do manual meshing
+    # ## Do manual meshing
     mesh.AddLine('x', [0, x])
     mesh.AddLine('y', [0, y])
     mesh.AddLine('z', [-1, z1+z2+z3])
 
-    ## Material definition for Debye calculations ##
+    ## Apply the waveguide port
+    ports = []
+    start=[0, 0, -1]
+    stop =[x, y, 0]
+    # mesh.AddLine('z', [start[2], stop[2]])
+    ports.append(FDTD.AddRectWaveGuidePort( 0, start, stop, 'z', x*unit, y*unit, 'TE10', excite=1))
+
+    # start=[0, 0, z1+z2+z3]
+    # stop =[x, y, z1+z2+z3-1]
+    # mesh.AddLine('z', [start[2], stop[2]])
+    # ports.append(FDTD.AddRectWaveGuidePort( 1, start, stop, 'z', x*unit, y*unit, 'TE10'))
+
+    # mesh.SmoothMeshLines('all', resolution, ratio=1.5)
+    mesh.SmoothMeshLines('x', resolution*5000, ratio=1.5)
+    mesh.SmoothMeshLines('y', resolution*5000, ratio=1.5)
+    mesh.SmoothMeshLines('z', resolution/20, ratio=1.5)
+
+        ## Material definition for Debye calculations ##
 
     # Skin
     skin_debye = DebyeParameters(40.936, 23.649, 0.3951, 0.72531, angularf[0], angularf[len(angularf)-1])
@@ -183,7 +200,7 @@ if fdtd_test:
     layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 0, skin_debye[2])
     layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 1, skin_debye[2])
     layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, skin_debye[2]) 
-    start = [0, 0, -1]
+    start = [0, 0, 0]
     stop  = [x, y, z1]
     layer1 = CSX.AddMaterial( 'epsilon1', epsilon=er1*np.ones(3))
     layer1.AddBox(start, stop)
@@ -211,23 +228,6 @@ if fdtd_test:
     stop  = [x, y, z1+z2+z3]
     layer3 = CSX.AddMaterial( 'epsilon1', epsilon=er3*np.ones(3))
     layer3.AddBox(start, stop)
-
-    ## Apply the waveguide port
-    ports = []
-    start=[0, 0, -1]
-    stop =[x, y, 0]
-    # mesh.AddLine('z', [start[2], stop[2]])
-    ports.append(FDTD.AddRectWaveGuidePort( 0, start, stop, 'z', x*unit, y*unit, 'TE10', excite=1))
-
-    # start=[0, 0, z1+z2+z3]
-    # stop =[x, y, z1+z2+z3-1]
-    # mesh.AddLine('z', [start[2], stop[2]])
-    # ports.append(FDTD.AddRectWaveGuidePort( 1, start, stop, 'z', x*unit, y*unit, 'TE10'))
-
-    # mesh.SmoothMeshLines('all', resolution, ratio=1.5)
-    mesh.SmoothMeshLines('x', resolution*2000, ratio=1.5)
-    mesh.SmoothMeshLines('y', resolution*2000, ratio=1.5)
-    mesh.SmoothMeshLines('z', resolution/20, ratio=1.5)
 
 
     ### Define dump box...
@@ -361,11 +361,11 @@ if fdtd_test and theo_test:
 
         # Plot the user-provided CSV data
         df_new = pd.read_csv('C:/opt/Projects/1-18G_s11_1_fat_2_spdebye_07172025.csv')
-        df_new = df_new[df_new['Freq [GHz]'] <= 4.0]
+        df_new = df_new[(df_new['Freq [GHz]'] >= f_start / 1e9) & (df_new['Freq [GHz]'] <= f_max / 1e9)]
         plt.plot(df_new['Freq [GHz]'], df_new['dB(S(wp1,wp1)) []'], 'b-', linewidth=2, label='HFSS '+'$S_{11}$')
         
         # Set plot title and labels
-        plt.title('S-Parameter Plot (Limited to 4 GHz)', fontsize=16)
+        plt.title(f'S-Parameter Plot', fontsize=16)
         plt.xlabel('Frequency (GHz)', fontsize=12)
         plt.ylabel('S-Parameter (dB)', fontsize=12)
         # plt.xlim(df_new['Freq [GHz]'].min(), 4.0)
@@ -373,7 +373,7 @@ if fdtd_test and theo_test:
         plt.legend()
 
         # Save the plot
-        plt.savefig('s_parameter_4ghz.png')
+        # plt.savefig('s_parameter_4ghz.png')
 
         # Print confirmation
         show()
@@ -404,11 +404,11 @@ elif theo_test:
 
         # Plot the user-provided CSV data
         df_new = pd.read_csv('C:/opt/Projects/1-18G_s11_1_fat_2_spdebye_07172025.csv')
-        df_new = df_new[df_new['Freq [GHz]'] <= 4.0]
+        df_new = df_new[(df_new['Freq [GHz]'] >= f_start / 1e9) & (df_new['Freq [GHz]'] <= f_max / 1e9)]
         plt.plot(df_new['Freq [GHz]'], df_new['dB(S(wp1,wp1)) []'], 'b-', linewidth=2, label='HFSS '+'$S_{11}$')
         
         # Set plot title and labels
-        plt.title('S-Parameter Plot (Limited to 4 GHz)', fontsize=16)
+        plt.title(f'S-Parameter Plot', fontsize=16)
         plt.xlabel('Frequency (GHz)', fontsize=12)
         plt.ylabel('S-Parameter (dB)', fontsize=12)
         # plt.xlim(df_new['Freq [GHz]'].min(), 4.0)
@@ -416,7 +416,7 @@ elif theo_test:
         plt.legend()
 
         # Save the plot
-        plt.savefig('s_parameter_4ghz.png')
+        # plt.savefig('s_parameter_4ghz.png')
 
         # Print confirmation
         show()
