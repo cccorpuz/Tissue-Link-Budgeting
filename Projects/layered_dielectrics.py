@@ -1,11 +1,7 @@
-import os, tempfile
-from datetime import datetime as dt
 from pylab import *
 import pandas as pd
 
-from CSXCAD import ContinuousStructure, ParameterObjects
-from openEMS import openEMS
-from openEMS.physical_constants import *
+from fdtd import *
 
 # import gmsh
 # from pyelmer import elmer
@@ -15,20 +11,19 @@ from openEMS.physical_constants import *
 
 ###### SELECT WHAT TO RUN ######
 fdtd_test = 1
-fdtd_test_debug = 1
+fdtd_test_debug = 0
 hfss_test = 0
 theo_test = 1
 ################################
 
 # Sweep Variables
-f_max = 14e9
+f_max = 17e9
 f_start = 1e9
 f_stop = f_max
 
 num_points = 201
 
 f = np.array(linspace(f_start,f_stop,num_points))
-angularf = np.array(2*np.pi*f)
 
 # Model Variables
 unit = 1e-3 # mm units
@@ -53,29 +48,34 @@ s1 = 0
 s2 = 0
 s3 = 0
 
-#### Debye parameter function calculation ####
-def DebyeParameters(eps_f1, eps_f2, tand_1, tand_2, omega_1, omega_2):
-    eps_s = eps_f1
-    s_f1 = omega_1*EPS0*eps_f1*tand_1
-    s_f2 = omega_2*EPS0*eps_f2*tand_2 - s_f1
-    t_relax = EPS0 * (np.abs(eps_f1-eps_f2) / np.abs(s_f2-s_f1))
-    eps_inf = eps_s - np.abs(eps_s - eps_f2) * ((1+(omega_2*t_relax)**2)/(omega_2*t_relax)**2)
-    eps_delta = eps_s - eps_inf
-    return [eps_inf, eps_delta, t_relax]
-
-def FirstOrderDebyeEquationEPS(eps_f1, eps_f2, tand_1, tand_2, omega_1, omega_2, s_DC):
-    parameters = DebyeParameters(eps_f1, eps_f2, tand_1, tand_2, omega_1, omega_2)
-    omega = angularf
-    return parameters[0] + parameters[1] / (1+1j*omega*parameters[2]) + s_DC/(1j*omega*EPS0)
-
-def FirstOrderDebyeEquationCOND(eps_f1, eps_f2, tand_1, tand_2, omega_1, omega_2, s_DC):
-    eps_s = eps_f1
-    parameters = DebyeParameters(eps_f1, eps_f2, tand_1, tand_2, omega_1, omega_2)
-    omega = angularf
-    return s_DC + (omega**2*EPS0*parameters[2]*(eps_s-parameters[0]))/(1+(omega*parameters[2])**2)
-
 #### Calculating Theoretical S11 ####
-def theo_s11(ers, ss, urs, d, num_points):
+def theo_s11(ers, ss, urs, d, num_points, f):
+    """Calculate theoretical S11 for layered dielectrics.
+    Args:
+        ers: List of relative permittivities for each layer (can be scalars or arrays)
+        ss: List of conductivities for each layer (can be scalars or arrays)
+        urs: Array of relative permeabilities for each layer (should be arrays)
+        d: Array of thicknesses for each layer (in meters)
+        num_points: Number of frequency points to calculate
+        
+    Returns:
+        Theoretical S11 as a complex array over the frequency range.
+        
+    Note:
+        EPS0 is the permittivity of free space (8.854187817e-12 F/m)
+        MUE0 is the permeability of free space (4*pi*1e-7 H/m)
+        angularf is the angular frequency array (2*pi*f)
+    """
+
+    angularf = np.array(2*np.pi*f)
+    s11 = 0
+
+    # Check that ers, ss, and urs are the same size
+    if not (len(ers) == len(ss) == len(urs)):
+        raise ValueError("ers, ss, and urs must have the same number of layers")
+    if not (len(ers) == len(ss) == urs.shape[0]):
+        raise ValueError("ers, ss, and urs must have the same number of layers")
+
     if 0 and all(isinstance(ers, np.ndarray) for var in ers) and all(len(ers)==num_points for var in ers): 
         er = np.array(ers)
     else:
@@ -132,150 +132,39 @@ def theo_s11(ers, ss, urs, d, num_points):
 #########################################################
 
 if fdtd_test:
-
-    sim_path = os.path.join(tempfile.gettempdir(), 'layered_dielectrics')
-    post_proc_only = False
-    print(sim_path)
-
-    FDTD = openEMS(NrTS=2e6, EndCriteria=1e-5)
-    # FDTD = openEMS(NrTS=5e5)
-    FDTD.SetGaussExcite(0.5*(f_start+f_stop),0.5*(f_stop-f_start))
-    FDTD.SetBoundaryCond( [ 'PEC', 'PEC', 'PMC', 'PMC', 'MUR', 'MUR' ] )
-
-    # Setup geom & mesh
-    CSX = ContinuousStructure()
-    FDTD.SetCSX(CSX)
-
-    # XY Mesh
-    mesh = CSX.GetGrid()
-    mesh.SetDeltaUnit(unit)
-
-    resolution = C0/(f_max*np.sqrt(max(er1,er2,er3))) / unit / 100  # 1/10 of wavelength in mm
-    print(f'Resolution: ${resolution} mm')
-
-    # ## Do manual meshing
-    mesh.AddLine('x', [0, x])
-    mesh.AddLine('y', [0, y])
-    mesh.AddLine('z', [-1, z1+z2+z3])
-
-    ## Apply the waveguide port
-    ports = []
-    start=[0, 0, -1]
-    stop =[x, y, 0]
-    # mesh.AddLine('z', [start[2], stop[2]])
-    ports.append(FDTD.AddRectWaveGuidePort( 0, start, stop, 'z', x*unit, y*unit, 'TE10', excite=1))
-
-    # start=[0, 0, z1+z2+z3]
-    # stop =[x, y, z1+z2+z3-1]
-    # mesh.AddLine('z', [start[2], stop[2]])
-    # ports.append(FDTD.AddRectWaveGuidePort( 1, start, stop, 'z', x*unit, y*unit, 'TE10'))
-
-    # mesh.SmoothMeshLines('all', resolution, ratio=1.5)
-    mesh.SmoothMeshLines('x', resolution*5000, ratio=1.5)
-    mesh.SmoothMeshLines('y', resolution*5000, ratio=1.5)
-    mesh.SmoothMeshLines('z', resolution/20, ratio=1.5)
-
-        ## Material definition for Debye calculations ##
-
-    # Skin
-    skin_debye = DebyeParameters(40.936, 23.649, 0.3951, 0.72531, angularf[0], angularf[len(angularf)-1])
-    # er1 = FirstOrderDebyeEquationEPS(40.936, 23.649, 0.3951, 0.72531, angularf[0], angularf[len(angularf)-1], 0)
-    # s1 = FirstOrderDebyeEquationCOND(40.936, 23.649, 0.3951, 0.72531, angularf[0], angularf[len(angularf)-1], 0)
-
-    # Fat
-    fat_debye = DebyeParameters(5.447, 4.0997, 0.17656, 0.27615, angularf[0], angularf[len(angularf)-1])
-    er2 = FirstOrderDebyeEquationEPS(5.447, 4.0997, 0.17656, 0.27615, angularf[0], angularf[len(angularf)-1], 0)
-    s2 = FirstOrderDebyeEquationCOND(5.447, 4.0997, 0.17656, 0.27615, angularf[0], angularf[len(angularf)-1], 0)
-
-    # Muscle
-    muscle_debye = DebyeParameters(54.811, 32.98, 0.3208, 0.6682, angularf[0], angularf[len(angularf)-1])
-    # er3 = FirstOrderDebyeEquationEPS(54.811, 32.98, 0.3208, 0.6682, angularf[0], angularf[len(angularf)-1], 0)
-    # s3 = FirstOrderDebyeEquationCOND(54.811, 32.98, 0.3208, 0.6682, angularf[0], angularf[len(angularf)-1], 0)
-    
-    
-    layer1 = CSX.AddDebyeMaterial( 'skin_debye' , epsilon=skin_debye[0]*np.ones(3), order=1)
-    layer1.SetDispersiveMaterialPropertyDir('eps_delta', 0, 0, skin_debye[1])
-    layer1.SetDispersiveMaterialPropertyDir('eps_delta', 0, 1, skin_debye[1])
-    layer1.SetDispersiveMaterialPropertyDir('eps_delta', 0, 2, skin_debye[1])
-    layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 0, skin_debye[2])
-    layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 1, skin_debye[2])
-    layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, skin_debye[2]) 
-    start = [0, 0, 0]
-    stop  = [x, y, z1]
-    layer1 = CSX.AddMaterial( 'epsilon1', epsilon=er1*np.ones(3))
-    layer1.AddBox(start, stop)
-
-    layer2 = CSX.AddDebyeMaterial( 'fat_debye' , epsilon=fat_debye[0]*np.ones(3), order=1)
-    layer2.SetDispersiveMaterialPropertyDir('eps_delta', 0, 0, fat_debye[1])
-    layer2.SetDispersiveMaterialPropertyDir('eps_delta', 0, 1, fat_debye[1])
-    layer2.SetDispersiveMaterialPropertyDir('eps_delta', 0, 2, fat_debye[1])
-    layer2.SetDispersiveMaterialPropertyDir('eps_relax', 0, 0, fat_debye[2])
-    layer2.SetDispersiveMaterialPropertyDir('eps_relax', 0, 1, fat_debye[2])
-    layer2.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, fat_debye[2])     
-    start = [0, 0, z1]
-    stop  = [x, y, z1+z2]
-    # layer2 = CSX.AddMaterial( 'epsilon1', epsilon=er2)
-    layer2.AddBox(start, stop)
-
-    layer3 = CSX.AddDebyeMaterial( 'muscle_debye' , epsilon=muscle_debye[0]*np.ones(3), order=1)
-    layer3.SetDispersiveMaterialPropertyDir('eps_delta', 0, 0, muscle_debye[1])
-    layer3.SetDispersiveMaterialPropertyDir('eps_delta', 0, 1, muscle_debye[1])
-    layer3.SetDispersiveMaterialPropertyDir('eps_delta', 0, 2, muscle_debye[1])
-    layer3.SetDispersiveMaterialPropertyDir('eps_relax', 0, 0, muscle_debye[2])
-    layer3.SetDispersiveMaterialPropertyDir('eps_relax', 0, 1, muscle_debye[2])
-    layer3.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, muscle_debye[2])     
-    start = [0, 0, z1+z2]
-    stop  = [x, y, z1+z2+z3]
-    layer3 = CSX.AddMaterial( 'epsilon1', epsilon=er3*np.ones(3))
-    layer3.AddBox(start, stop)
-
-
-    ### Define dump box...
-    # Et = CSX.AddDump('Et', file_type=0, sub_sampling=[2,2,2])
-    # start = [0, 0, 0];
-    # stop  = [x, y, z1+z2+z3];
-    # Et.AddBox(start, stop);
-
-    ### Run the simulation
-    if fdtd_test_debug:  # debugging only
-        CSX_file = os.path.join(sim_path, 'layered_dielectrics.xml')
-        CSX_file2 = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'layered_dielectrics.xml')
-        if not os.path.exists(sim_path):
-            os.mkdir(sim_path)
-        CSX.Write2XML(CSX_file)
-        CSX.Write2XML(CSX_file2)
-        from CSXCAD import AppCSXCAD_BIN
-        # NOTE: Change the path to AppCSXCAD_BIN in CSXCAD/__init__.py if needed to "bin/AppCSXCAD"!
-        os.system(AppCSXCAD_BIN + ' "{}"'.format(CSX_file))
-
-    if not post_proc_only:
-        FDTD.Run(sim_path, cleanup=True, verbose=3)
-
-    ### Postprocessing & plotting
-    for port in ports:
-        port.CalcPort(sim_path, f)
-
-    s11 = ports[0].uf_ref / ports[0].uf_inc
-    # s21 = ports[1].uf_ref / ports[0].uf_inc
-    ZL  = ports[0].uf_tot / ports[0].if_tot
-    ZL_a = ports[0].ZL # analytic waveguide impedance
-
-    fdtd_output = {
-        'f' : f,
-        's11' : s11,
-        # 's21' : s21,
-        'ZL' : ZL,
-        'ZL_a' : ZL_a
-    }
-
-    fdtd_output_DF = pd.DataFrame(fdtd_output)
-    fdtd_output = fdtd_output_DF.dropna(inplace=True)
-
-    timestamp = dt.now().strftime("%Y-%m-%d_%H-%M-%S")
-    print(f'Finishing up openEMS FDTD at {timestamp}')
-    filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), f"layered_dielectrics_openEMS_FDTD_{timestamp}.csv")
-    fdtd_output_DF.to_csv(filename, index=False)
-    print(f'Finishing export to {filename}')
+    # Split the frequency sweep into 5 GHz intervals and run FDTD for each
+    s11 = np.zeros(num_points, dtype=complex)
+    sweep_edges = np.arange(f_start, f_stop + 1, 4e9)
+    if sweep_edges[-1] < f_stop:
+        sweep_edges = np.append(sweep_edges, f_stop)
+    sweep_indices = np.searchsorted(f, sweep_edges)
+    for i in range(len(sweep_edges) - 1):
+        idx_start = sweep_indices[i]
+        idx_stop = sweep_indices[i+1]
+        f_sweep_start = f[idx_start]
+        f_sweep_stop = f[idx_stop-1] if idx_stop > idx_start else f[idx_start]
+        num_points_sweep = idx_stop - idx_start
+        if num_points_sweep <= 1:
+            continue
+        s11_part = run_fdtd_s11(
+            max_timesteps=2e6,
+            f_start=f_sweep_start,
+            f_stop=f_sweep_stop,
+            f_max=f_max,
+            num_points=num_points_sweep,
+            er1=er1, er2=er2, er3=er3,
+            ur1=ur1, ur2=ur2, ur3=ur3,
+            s1=s1, s2=s2, s3=s3,
+            x=x, y=y, z1=z1, z2=z2, z3=z3,
+            unit=unit, fdtd_test_debug=fdtd_test_debug, post_proc_only=False
+        )
+        s11[idx_start:idx_stop] = s11_part
+    # s11_1 = run_fdtd_s11(max_timesteps=2e6, f_start=f_start, f_stop=f_stop, f_max=f_max, num_points=num_points,
+    #                     er1=er1, er2=er2, er3=er3,
+    #                     ur1=ur1, ur2=ur2, ur3=ur3,
+    #                     s1=s1, s2=s2, s3=s3, 
+    #                     x=x, y=y, z1=z1, z2=z2, z3=z3,
+    #                     unit=unit, fdtd_test_debug=fdtd_test_debug, post_proc_only=False)
 
 
 #########################################################
@@ -319,7 +208,7 @@ if theo_test:
 
     d = np.array([z1, z2, z3]) * unit
 
-    g = theo_s11(ers, ss, urs, d, num_points)
+    g = theo_s11(ers, ss, urs, d, num_points, f)
 
 # HFSS Theoretical
 if theo_test:
@@ -335,7 +224,7 @@ if theo_test:
 
     d = np.array([z1, z2, z3]) * unit
 
-    g_hfss = theo_s11(ers, ss, urs, d, num_points)
+    g_hfss = theo_s11(ers, ss, urs, d, num_points, f)
 
 
 #########################################################
@@ -360,7 +249,8 @@ if fdtd_test and theo_test:
         plt.plot(f*1e-9,20*log10(abs(g_hfss)),'y:',linewidth=2, label='HFSS Theoretical '+'$S_{11}$')
 
         # Plot the user-provided CSV data
-        df_new = pd.read_csv('C:/opt/Projects/1-18G_s11_1_fat_2_spdebye_07172025.csv')
+        temppath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '1-18G_s11_1_fat_2_spdebye_07172025.csv')
+        df_new = pd.read_csv(temppath)
         df_new = df_new[(df_new['Freq [GHz]'] >= f_start / 1e9) & (df_new['Freq [GHz]'] <= f_max / 1e9)]
         plt.plot(df_new['Freq [GHz]'], df_new['dB(S(wp1,wp1)) []'], 'b-', linewidth=2, label='HFSS '+'$S_{11}$')
         
@@ -390,7 +280,6 @@ if fdtd_test and theo_test:
     # xlabel(r'frequency (MHz) $\rightarrow$')
     # legend()
 
-    show()
 elif theo_test:
 
     try:
@@ -403,7 +292,7 @@ elif theo_test:
         plt.plot(f*1e-9,20*log10(abs(g_hfss)),'y:',linewidth=2, label='HFSS Theoretical '+'$S_{11}$')
 
         # Plot the user-provided CSV data
-        df_new = pd.read_csv('C:/opt/Projects/1-18G_s11_1_fat_2_spdebye_07172025.csv')
+        df_new = pd.read_csv('1-18G_s11_1_fat_2_spdebye_07172025.csv')
         df_new = df_new[(df_new['Freq [GHz]'] >= f_start / 1e9) & (df_new['Freq [GHz]'] <= f_max / 1e9)]
         plt.plot(df_new['Freq [GHz]'], df_new['dB(S(wp1,wp1)) []'], 'b-', linewidth=2, label='HFSS '+'$S_{11}$')
         
