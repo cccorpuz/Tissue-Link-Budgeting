@@ -20,12 +20,13 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
     print(f'Starting openEMS FDTD at {timestamp}')
 
     # Setup openEMS
-    sim_path = os.path.join(tempfile.gettempdir(), 'layered_dielectrics')
+    sim_path = os.path.join(tempfile.gettempdir(), f'layered_dielectrics{timestamp}')
     post_proc_only = False
     print(sim_path)
 
     FDTD = openEMS(NrTS=max_timesteps, EndCriteria=1e-4)
-    FDTD.SetGaussExcite(0.5*(f_start+f_stop),0.5*(f_stop-f_start))
+    # FDTD.SetGaussExcite(0.5*(f_start+f_stop),0.5*(f_stop-f_start))
+    FDTD.SetDiracExcite(f_max)
     FDTD.SetBoundaryCond( [ 'PEC', 'PEC', 'PMC', 'PMC', 'MUR', 'MUR' ] )
 
     # Setup geom & mesh
@@ -36,7 +37,11 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
     mesh = CSX.GetGrid()
     mesh.SetDeltaUnit(unit)
 
-    resolution = C0/(f_max*np.sqrt(max(er1,er2,er3))) / unit / 100  # 1/10 of wavelength in mm
+    # Resolve er before continuing
+    er3 = er3*np.ones(3)
+
+    resolution = C0/(f_max*np.sqrt(max(max(abs(er1)),max(abs(er2)),max(abs(er3))))) / unit # wavelength in mm
+
     print(f'Resolution: ${resolution} mm')
 
     # ## Do manual meshing
@@ -57,16 +62,16 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
     # ports.append(FDTD.AddRectWaveGuidePort( 1, start, stop, 'z', x*unit, y*unit, 'TE10'))
 
     # mesh.SmoothMeshLines('all', resolution, ratio=1.5)
-    mesh.SmoothMeshLines('x', resolution*5000, ratio=1.5)
-    mesh.SmoothMeshLines('y', resolution*5000, ratio=1.5)
-    mesh.SmoothMeshLines('z', resolution/20, ratio=1.5)
+    mesh.SmoothMeshLines('x', resolution*10*f_max/1e9, ratio=1.5)
+    mesh.SmoothMeshLines('y', resolution*10*f_max/1e9, ratio=1.5)
+    mesh.SmoothMeshLines('z', resolution/800, ratio=1.5)
 
     ## Material definition for Debye calculations ##
 
     # Skin
     skin_debye = DebyeParameters(40.936, 23.649, 0.3951, 0.72531, angularf[0], angularf[len(angularf)-1])
-    # er1 = FirstOrderDebyeEquationEPS(40.936, 23.649, 0.3951, 0.72531, angularf[0], angularf[len(angularf)-1], 0, num_points)
-    # s1 = FirstOrderDebyeEquationCOND(40.936, 23.649, 0.3951, 0.72531, angularf[0], angularf[len(angularf)-1], 0, num_points)
+    er1 = FirstOrderDebyeEquationEPS(40.936, 23.649, 0.3951, 0.72531, angularf[0], angularf[len(angularf)-1], 0, num_points)
+    s1 = FirstOrderDebyeEquationCOND(40.936, 23.649, 0.3951, 0.72531, angularf[0], angularf[len(angularf)-1], 0, num_points)
 
     # Fat
     fat_debye = DebyeParameters(5.447, 4.0997, 0.17656, 0.27615, angularf[0], angularf[len(angularf)-1])
@@ -88,7 +93,7 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
     layer1.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, skin_debye[2]) 
     start = [0, 0, 0]
     stop  = [x, y, z1]
-    layer1 = CSX.AddMaterial( 'epsilon1', epsilon=er1*np.ones(3))
+    # layer1 = CSX.AddMaterial( 'epsilon1', epsilon=er1[0]*np.ones(3))
     layer1.AddBox(start, stop)
 
     layer2 = CSX.AddDebyeMaterial( 'fat_debye' , epsilon=fat_debye[0]*np.ones(3), order=1)
@@ -100,7 +105,7 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
     layer2.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, fat_debye[2])     
     start = [0, 0, z1]
     stop  = [x, y, z1+z2]
-    # layer2 = CSX.AddMaterial( 'epsilon1', epsilon=er2)
+    # layer2 = CSX.AddMaterial( 'epsilon1', epsilon=er2[0]*np.ones(3))
     layer2.AddBox(start, stop)
 
     layer3 = CSX.AddDebyeMaterial( 'muscle_debye' , epsilon=muscle_debye[0]*np.ones(3), order=1)
@@ -112,7 +117,7 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
     layer3.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, muscle_debye[2])     
     start = [0, 0, z1+z2]
     stop  = [x, y, z1+z2+z3]
-    layer3 = CSX.AddMaterial( 'epsilon1', epsilon=er3*np.ones(3))
+    layer3 = CSX.AddMaterial( 'epsilon1', epsilon=er3)
     layer3.AddBox(start, stop)
 
 
@@ -135,7 +140,7 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
         os.system(AppCSXCAD_BIN + ' "{}"'.format(CSX_file))
 
     if not post_proc_only:
-        FDTD.Run(sim_path, cleanup=True, verbose=3)
+        FDTD.Run(sim_path, cleanup=True)
 
     ### Postprocessing & plotting
     for port in ports:
