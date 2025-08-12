@@ -38,16 +38,25 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
     mesh.SetDeltaUnit(unit)
 
     # Resolve er before continuing
-    er3 = er3*np.ones(3)
+    # er3 = er3*np.ones(3)
 
     resolution = C0/(f_max*np.sqrt(max(max(abs(er1)),max(abs(er2)),max(abs(er3))))) / unit # wavelength in mm
 
-    print(f'Resolution: ${resolution} mm')
+    print(f'Smallest Wavelength: ${resolution} mm')
 
     # ## Do manual meshing
     mesh.AddLine('x', [0, x])
     mesh.AddLine('y', [0, y])
+    mesh.SmoothMeshLines('x', resolution*10*f_max/1e9, ratio=1.5)
+    mesh.SmoothMeshLines('y', resolution*10*f_max/1e9, ratio=1.5)
+
     mesh.AddLine('z', [-1, z1+z2+z3])
+    mesh.SmoothMeshLines('z', resolution/200, ratio=1.5)
+
+    mesh.AddLine('z', [0, z1])
+    mesh.AddLine('z', [z1+z2, z1+z2+z3])
+    mesh.SmoothMeshLines('z', resolution/800, ratio=1.5)
+
 
     ## Apply the waveguide port
     ports = []
@@ -60,11 +69,6 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
     # stop =[x, y, z1+z2+z3-1]
     # mesh.AddLine('z', [start[2], stop[2]])
     # ports.append(FDTD.AddRectWaveGuidePort( 1, start, stop, 'z', x*unit, y*unit, 'TE10'))
-
-    # mesh.SmoothMeshLines('all', resolution, ratio=1.5)
-    mesh.SmoothMeshLines('x', resolution*10*f_max/1e9, ratio=1.5)
-    mesh.SmoothMeshLines('y', resolution*10*f_max/1e9, ratio=1.5)
-    mesh.SmoothMeshLines('z', resolution/800, ratio=1.5)
 
     ## Material definition for Debye calculations ##
 
@@ -80,8 +84,8 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
 
     # Muscle
     muscle_debye = DebyeParameters(54.811, 32.98, 0.3208, 0.6682, angularf[0], angularf[len(angularf)-1])
-    # er3 = FirstOrderDebyeEquationEPS(54.811, 32.98, 0.3208, 0.6682, angularf[0], angularf[len(angularf)-1], 0, num_points)
-    # s3 = FirstOrderDebyeEquationCOND(54.811, 32.98, 0.3208, 0.6682, angularf[0], angularf[len(angularf)-1], 0, num_points)
+    er3 = FirstOrderDebyeEquationEPS(54.811, 32.98, 0.3208, 0.6682, angularf[0], angularf[len(angularf)-1], 0, num_points)
+    s3 = FirstOrderDebyeEquationCOND(54.811, 32.98, 0.3208, 0.6682, angularf[0], angularf[len(angularf)-1], 0, num_points)
     
     
     layer1 = CSX.AddDebyeMaterial( 'skin_debye' , epsilon=skin_debye[0]*np.ones(3), order=1)
@@ -117,7 +121,7 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
     layer3.SetDispersiveMaterialPropertyDir('eps_relax', 0, 2, muscle_debye[2])     
     start = [0, 0, z1+z2]
     stop  = [x, y, z1+z2+z3]
-    layer3 = CSX.AddMaterial( 'epsilon1', epsilon=er3)
+    # layer3 = CSX.AddMaterial( 'epsilon1', epsilon=er3)
     layer3.AddBox(start, stop)
 
 
