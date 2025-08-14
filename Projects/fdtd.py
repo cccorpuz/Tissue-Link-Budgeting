@@ -42,20 +42,23 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
 
     resolution = C0/(f_max*np.sqrt(max(max(abs(er1)),max(abs(er2)),max(abs(er3))))) / unit # wavelength in mm
 
-    print(f'Smallest Wavelength: ${resolution} mm')
+    print(f'Smallest Wavelength: {resolution} mm')
 
     # ## Do manual meshing
     mesh.AddLine('x', [0, x])
     mesh.AddLine('y', [0, y])
-    mesh.SmoothMeshLines('x', resolution*10*f_max/1e9, ratio=1.5)
-    mesh.SmoothMeshLines('y', resolution*10*f_max/1e9, ratio=1.5)
+    dx = resolution
+    dy = resolution
+    mesh.SmoothMeshLines('x', dx, ratio=1.5)
+    mesh.SmoothMeshLines('y', dy, ratio=1.5)
 
     mesh.AddLine('z', [-1, z1+z2+z3])
-    mesh.SmoothMeshLines('z', resolution/200, ratio=1.5)
-
     mesh.AddLine('z', [0, z1])
     mesh.AddLine('z', [z1+z2, z1+z2+z3])
-    mesh.SmoothMeshLines('z', resolution/800, ratio=1.5)
+    dz = resolution/400
+    mesh.SmoothMeshLines('z', dz, ratio=1.5)
+
+    print(f'dx: {dx} mm\ndy: {dy} mm\ndz: {dz} mm')
 
 
     ## Apply the waveguide port
@@ -123,6 +126,9 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
     stop  = [x, y, z1+z2+z3]
     # layer3 = CSX.AddMaterial( 'epsilon1', epsilon=er3)
     layer3.AddBox(start, stop)
+
+    minimum_timestep_convergence_debye = min(dx,dy,dz)*np.sqrt(min(skin_debye[0],fat_debye[0],muscle_debye[0])*EPS0*MUE0) / np.sqrt(3)
+    print(f'Minimum timestep for convergence if uniform mesh: {minimum_timestep_convergence_debye} seconds')
 
 
     ### Define dump box...

@@ -22,7 +22,7 @@ theo_test = 1
 
 # Sweep Variables
 f_max = 14e9
-f_start = 1e9
+f_start = 10e9
 f_stop = f_max
 
 num_points = 201
@@ -32,8 +32,8 @@ angularf = 2*np.pi*f
 
 # Model Variables
 unit = 1e-3 # mm units
-x = 10000 # 20m, FDTD
-y = 10000 # 20m, FDTD
+x = 200 # 20m, FDTD
+y = 200 # 20m, FDTD
 z1 = 8 # 5mm thick
 z2 = 3
 z3 = 20
