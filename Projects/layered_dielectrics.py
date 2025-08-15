@@ -32,8 +32,8 @@ angularf = 2*np.pi*f
 
 # Model Variables
 unit = 1e-3 # mm units
-x = 200 # 20m, FDTD
-y = 200 # 20m, FDTD
+x = 400 # 20m, FDTD
+y = 400 # 20m, FDTD
 z1 = 8 # 5mm thick
 z2 = 3
 z3 = 20

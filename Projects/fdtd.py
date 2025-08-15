@@ -47,15 +47,15 @@ def run_fdtd_s11(max_timesteps, f_start, f_stop, f_max, num_points, er1, er2, er
     # ## Do manual meshing
     mesh.AddLine('x', [0, x])
     mesh.AddLine('y', [0, y])
-    dx = resolution
-    dy = resolution
+    dx = resolution*10
+    dy = resolution*10
     mesh.SmoothMeshLines('x', dx, ratio=1.5)
     mesh.SmoothMeshLines('y', dy, ratio=1.5)
 
     mesh.AddLine('z', [-1, z1+z2+z3])
     mesh.AddLine('z', [0, z1])
     mesh.AddLine('z', [z1+z2, z1+z2+z3])
-    dz = resolution/400
+    dz = resolution/1000
     mesh.SmoothMeshLines('z', dz, ratio=1.5)
 
     print(f'dx: {dx} mm\ndy: {dy} mm\ndz: {dz} mm')
