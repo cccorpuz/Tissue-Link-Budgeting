@@ -32,7 +32,8 @@ int main()
             ez[mm] = ez[mm] + (hy[mm] - hy[mm - 1]) * imp0;
 
         /* hardcode a source node */
-        ez[0] = exp(-(qTime - 30.) * (qTime - 30.) / 100.0);
+        /* ez[0] = exp(-(qTime - 30.) * (qTime - 30.) / 100.0);*/
+        ez[50] += exp(-(qTime - 30.) * (qTime - 30.) / 100.0);
 
         /* export Ez at DUMP_LOCATION to file */
         static FILE *fp = NULL;
