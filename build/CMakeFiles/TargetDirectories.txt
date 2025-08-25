@@ -1,0 +1,7 @@
+C:/Tissue-Link-Budgeting/build/CMakeFiles/CSXCAD.dir
+C:/Tissue-Link-Budgeting/build/CMakeFiles/edit_cache.dir
+C:/Tissue-Link-Budgeting/build/CMakeFiles/rebuild_cache.dir
+C:/Tissue-Link-Budgeting/build/CMakeFiles/list_install_components.dir
+C:/Tissue-Link-Budgeting/build/CMakeFiles/install.dir
+C:/Tissue-Link-Budgeting/build/CMakeFiles/install/local.dir
+C:/Tissue-Link-Budgeting/build/CMakeFiles/install/strip.dir

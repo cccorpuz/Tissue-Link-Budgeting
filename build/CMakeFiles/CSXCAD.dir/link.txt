@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\CSXCAD.dir/objects.a
+C:\msys64\mingw64\bin\ar.exe qc CMakeFiles\CSXCAD.dir/objects.a @CMakeFiles\CSXCAD.dir\objects1.rsp
+C:\msys64\mingw64\bin\g++.exe -g -shared -o libCSXCAD.dll -Wl,--out-implib,libCSXCAD.dll.a -Wl,--major-image-version,0,--minor-image-version,0 -Wl,--whole-archive CMakeFiles\CSXCAD.dir/objects.a -Wl,--no-whole-archive @CMakeFiles\CSXCAD.dir\linkLibs.rsp

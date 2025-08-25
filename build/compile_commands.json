@@ -1,0 +1,230 @@
+[
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\ContinuousStructure.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\ContinuousStructure.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/ContinuousStructure.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/ContinuousStructure.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimitives.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimitives.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimitives.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimitives.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSProperties.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSProperties.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSProperties.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSProperties.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSRectGrid.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSRectGrid.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSRectGrid.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSRectGrid.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\ParameterObjects.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\ParameterObjects.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/ParameterObjects.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/ParameterObjects.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSFunctionParser.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSFunctionParser.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSFunctionParser.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSFunctionParser.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSUseful.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSUseful.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSUseful.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSUseful.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\ParameterCoord.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\ParameterCoord.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/ParameterCoord.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/ParameterCoord.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSTransform.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSTransform.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSTransform.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSTransform.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimPoint.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimPoint.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimPoint.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimPoint.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimBox.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimBox.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimBox.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimBox.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimMultiBox.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimMultiBox.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimMultiBox.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimMultiBox.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimSphere.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimSphere.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimSphere.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimSphere.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimSphericalShell.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimSphericalShell.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimSphericalShell.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimSphericalShell.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimCylinder.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimCylinder.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimCylinder.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimCylinder.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimCylindricalShell.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimCylindricalShell.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimCylindricalShell.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimCylindricalShell.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimPolygon.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimPolygon.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimPolygon.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimPolygon.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimLinPoly.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimLinPoly.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimLinPoly.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimLinPoly.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimRotPoly.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimRotPoly.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimRotPoly.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimRotPoly.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimPolyhedron.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimPolyhedron.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimPolyhedron.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimPolyhedron.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimPolyhedronReader.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimPolyhedronReader.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimPolyhedronReader.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimPolyhedronReader.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimCurve.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimCurve.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimCurve.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimCurve.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimWire.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimWire.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimWire.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimWire.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPrimUserDefined.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPrimUserDefined.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPrimUserDefined.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPrimUserDefined.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropUnknown.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropUnknown.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropUnknown.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropUnknown.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropMaterial.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropMaterial.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropMaterial.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropMaterial.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropDispersiveMaterial.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropDispersiveMaterial.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropDispersiveMaterial.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropDispersiveMaterial.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropLorentzMaterial.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropLorentzMaterial.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropLorentzMaterial.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropLorentzMaterial.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropDebyeMaterial.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropDebyeMaterial.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropDebyeMaterial.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropDebyeMaterial.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropDiscMaterial.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropDiscMaterial.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropDiscMaterial.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropDiscMaterial.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropLumpedElement.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropLumpedElement.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropLumpedElement.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropLumpedElement.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropMetal.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropMetal.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropMetal.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropMetal.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropConductingSheet.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropConductingSheet.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropConductingSheet.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropConductingSheet.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropExcitation.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropExcitation.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropExcitation.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropExcitation.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropProbeBox.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropProbeBox.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropProbeBox.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropProbeBox.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropDumpBox.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropDumpBox.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropDumpBox.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropDumpBox.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSPropResBox.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSPropResBox.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSPropResBox.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSPropResBox.obj"
+},
+{
+  "directory": "C:/Tissue-Link-Budgeting/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DCSXCAD_EXPORTS  -g -o CMakeFiles\\CSXCAD.dir\\CSBackgroundMaterial.obj -c C:\\Tissue-Link-Budgeting\\openEMS\\openEMS-Project\\CSXCAD\\src\\CSBackgroundMaterial.cpp",
+  "file": "C:/Tissue-Link-Budgeting/openEMS/openEMS-Project/CSXCAD/src/CSBackgroundMaterial.cpp",
+  "output": "CMakeFiles/CSXCAD.dir/CSBackgroundMaterial.obj"
+}
+]
