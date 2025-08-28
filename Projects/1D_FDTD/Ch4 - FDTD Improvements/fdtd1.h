@@ -1,0 +1,34 @@
+#ifndef _FDTD1_H
+#define _FDTD1_H
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Grid {
+    double *ez;
+    double *hy;
+    int sizeX;
+    int time, maxTime;
+    double cdtds;
+};
+
+typedef struct Grid Grid;
+
+/* memory allocation macro defined here */
+#define ALLOC_1D(PNTR, NUM, TYPE)                                               \
+    PNTR = (TYPE *) calloc(NUM, sizeof(TYPE));                                  \
+    if (!PNTR) {                                                                \
+        perror("ALLOC_1D");                                                     \
+        fprintf(stderr, "Allocation failed for " #PNTR ". Terminating...\n");   \
+        exit(-1);                                                               \
+    }                                                                           \
+
+/* macros to access arrays, assuming Grid structure is called 'g' */
+#define Hy(MM)      g->hy[MM]
+#define Ez(MM)      g->ez[MM]
+#define SizeX       g->sizeX
+#define Time        g->time
+#define MaxTime     g->maxTime
+#define Cdtds       g->cdtds
+
+#endif
