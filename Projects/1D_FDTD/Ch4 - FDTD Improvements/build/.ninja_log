@@ -1,15 +1,10 @@
 # ninja log v7
-35	226	7783115388294773	CMakeFiles/engine.dir/ezInc.c.obj	ff7d6d6d32eee719
+38	180	7783164144384359	CMakeFiles/engine.dir/ezInc.c.obj	ff7d6d6d32eee719
 26	224	7783115388172387	CMakeFiles/engine.dir/engine.c.obj	b92636e5e30e803
-12	183	7783157473283669	CMakeFiles/engine.dir/abc.c.obj	772f3eda72ef2a98
+27	175	7783164144223830	CMakeFiles/engine.dir/abc.c.obj	772f3eda72ef2a98
 94	238	7783115388868634	CMakeFiles/engine.dir/update.c.obj	adb319d6245248a2
-25	197	7783157473346292	CMakeFiles/engine.dir/gridInit.c.obj	ce4141eb7e090d7c
-38	184	7783157473555804	CMakeFiles/engine.dir/tfsf.c.obj	86eceb78c28a02ca
+31	2912	7783574506993540	CMakeFiles/engine.dir/gridInit.c.obj	ce4141eb7e090d7c
+47	2916	7783574507169229	CMakeFiles/engine.dir/tfsf.c.obj	86eceb78c28a02ca
 13	250	7783142340693164	CMakeFiles/engine.dir/snapshot.c.obj	f84d7602c0b0291d
 131	259	7783107608156313	engine.exe	3e89dd4941a23ea0
-198	469	7783157475144393	C:/Tissue-Link-Budgeting/Projects/1D_FDTD/Ch4 - FDTD Improvements/run/engine.exe	e7cd410f151d8d89
-27	175	7783164144223830	CMakeFiles/engine.dir/abc.c.obj	772f3eda72ef2a98
-38	180	7783164144384359	CMakeFiles/engine.dir/ezInc.c.obj	ff7d6d6d32eee719
-50	187	7783164144557682	CMakeFiles/engine.dir/gridInit.c.obj	ce4141eb7e090d7c
-63	211	7783164144671889	CMakeFiles/engine.dir/tfsf.c.obj	86eceb78c28a02ca
-211	426	7783164146166879	C:/Tissue-Link-Budgeting/Projects/1D_FDTD/Ch4 - FDTD Improvements/run/engine.exe	e7cd410f151d8d89
+2916	3794	7783574535885513	C:/Tissue-Link-Budgeting/Projects/1D_FDTD/Ch4 - FDTD Improvements/run/engine.exe	e7cd410f151d8d89

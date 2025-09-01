@@ -1,7 +1,7 @@
 #include "fdtd.h"
 
 #define LOSS 0.02
-#define LOSS_LAYER 180
+#define LOSS_LAYER 100
 #define EPSR 9.0
 
 void gridInit(Grid *g) {
