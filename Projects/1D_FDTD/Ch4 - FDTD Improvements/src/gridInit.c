@@ -1,7 +1,7 @@
 #include "fdtd.h"
 
 #define LOSS 0.02
-#define LOSS_LAYER 100
+#define LOSS_LAYER 150
 #define EPSR 9.0
 
 void gridInit(Grid *g) {
@@ -9,7 +9,7 @@ void gridInit(Grid *g) {
     int mm;
 
     SizeX = 200;
-    MaxTime = 200;
+    MaxTime = 1000;
     Cdtds = 1.0; /* Courant number*/
 
     ALLOC_1D(g->ez, SizeX, double);

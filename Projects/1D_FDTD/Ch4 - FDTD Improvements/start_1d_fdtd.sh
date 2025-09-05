@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-
-cd build && cmake ../src && ninja && cd ../run && ./engine && gnuplot animate_wave_1D.gp
+rm -rf build
+mkdir build && cd build && cmake ../src && ninja && cd ../run && ./engine && gnuplot animate_wave_1D.gp
