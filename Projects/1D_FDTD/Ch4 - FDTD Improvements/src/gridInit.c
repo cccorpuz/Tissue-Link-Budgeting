@@ -1,15 +1,15 @@
 #include "fdtd.h"
 
-#define LOSS 0.02
-#define LOSS_LAYER 150
-#define EPSR 9.0
+#define LOSS 0.0253146
+#define LOSS_LAYER 100
+#define EPSR 4.0
 
 void gridInit(Grid *g) {
     double imp0 = 377.0;
     int mm;
 
     SizeX = 200;
-    MaxTime = 1000;
+    MaxTime = 450;
     Cdtds = 1.0; /* Courant number*/
 
     ALLOC_1D(g->ez, SizeX, double);
@@ -20,10 +20,7 @@ void gridInit(Grid *g) {
     ALLOC_1D(g->chye, SizeX - 1, double);
 
     for (mm = 0; mm < SizeX; mm++) {
-        if (mm < 100) {
-            Ceze(mm) = 1.0;
-            Cezh(mm) = imp0;
-        } else if (mm < LOSS_LAYER) {
+        if (mm < LOSS_LAYER) {
             Ceze(mm) = 1.0;
             Cezh(mm) = imp0 / EPSR;
         } else {

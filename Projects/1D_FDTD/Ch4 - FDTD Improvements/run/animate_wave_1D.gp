@@ -10,8 +10,8 @@ set yrange [STATS_min:STATS_max]
 set terminal gif animate delay 10
 set output 'wave_animation.gif'
 set title "Simulation Output Animation"
-set xlabel "Position"
-set ylabel "E-Field Magnitudea"
+set xlabel "Position (spatial index, k)"
+set ylabel "E-Field Magnitude (V/m)"
 
 stats 'sim_output.csv' nooutput
 

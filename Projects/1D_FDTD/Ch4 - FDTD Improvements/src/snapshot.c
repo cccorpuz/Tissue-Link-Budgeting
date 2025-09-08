@@ -1,7 +1,7 @@
 #include "fdtd.h"
 
 static int temporalStride = 0, spatialStride, startTime, startNode, endNode, frame = 0;
-static char basename[80];
+static char basename[80] = "sim_output";
 
 void snapshotInit(Grid *g) {
     
@@ -12,8 +12,6 @@ void snapshotInit(Grid *g) {
     printf(" Grid has %d total nodes (ranging from 0 to %d).\n", SizeX, SizeX-1);
     printf(" Enter first node, last node, and spatial stride: ");
     scanf(" %d %d %d", &startNode, &endNode, &spatialStride);
-    printf(" Enter the base name: ");
-    scanf(" %s", basename);
 
     return;
 }
