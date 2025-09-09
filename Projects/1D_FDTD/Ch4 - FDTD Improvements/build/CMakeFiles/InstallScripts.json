@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"C:/Tissue-Link-Budgeting/Projects/1D_FDTD/Ch4 - FDTD Improvements/build/cmake_install.cmake"
+		"C:/Tissue-Link-Budgeting/projects/1D_FDTD/Ch4 - FDTD Improvements/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

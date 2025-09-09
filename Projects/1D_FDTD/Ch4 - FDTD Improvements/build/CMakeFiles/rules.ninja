@@ -42,7 +42,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = C:\msys64\mingw64\bin\cmake.exe --regenerate-during-build -S"C:\Tissue-Link-Budgeting\Projects\1D_FDTD\Ch4 - FDTD Improvements\src" -B"C:\Tissue-Link-Budgeting\Projects\1D_FDTD\Ch4 - FDTD Improvements\build"
+  command = C:\msys64\mingw64\bin\cmake.exe --regenerate-during-build -S"C:\Tissue-Link-Budgeting\Projects\1D_FDTD\Ch4 - FDTD Improvements\src" -B"C:\Tissue-Link-Budgeting\projects\1D_FDTD\Ch4 - FDTD Improvements\build"
   description = Re-running CMake...
   generator = 1
 

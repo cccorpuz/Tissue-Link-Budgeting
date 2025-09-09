@@ -4,7 +4,7 @@
 #define LOSS_LAYER 100
 #define EPSR 4.0
 
-void gridInit(Grid *g) {
+void gridInit(Grid *g, int simType) {
     double imp0 = 377.0;
     int mm;
 
@@ -20,7 +20,7 @@ void gridInit(Grid *g) {
     ALLOC_1D(g->chye, SizeX - 1, double);
 
     for (mm = 0; mm < SizeX; mm++) {
-        if (mm < LOSS_LAYER) {
+        if (mm < LOSS_LAYER || !simType) {
             Ceze(mm) = 1.0;
             Cezh(mm) = imp0 / EPSR;
         } else {
@@ -30,7 +30,7 @@ void gridInit(Grid *g) {
     }
 
     for (mm = 0; mm < SizeX - 1; mm++) {
-        if (mm < LOSS_LAYER) {
+        if (mm < LOSS_LAYER || !simType) {
             Chyh(mm) = 1.0;
             Chye(mm) = 1.0 / imp0;
         } else {

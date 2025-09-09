@@ -40,15 +40,19 @@ typedef struct Grid Grid;
 void abcInit(Grid *g);
 void abc(Grid *g);
 
-void gridInit(Grid *g);
+void gridInit(Grid *g, int simType);
 
-void snapshotInit(Grid *g);
+void snapshotInit(Grid *g, int simType);
 void snapshot(Grid *g);
+void snapshotClose(void);
+int getTemporalStride(void);
 
 void tfsfInit(Grid *g);
 void tfsfUpdate(Grid *g);
 
 void updateE(Grid *g);
 void updateH(Grid *g);
+
+void runningEzDft(Grid *g);
 
 #endif
