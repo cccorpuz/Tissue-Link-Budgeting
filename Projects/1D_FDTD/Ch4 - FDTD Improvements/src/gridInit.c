@@ -9,7 +9,7 @@ void gridInit(Grid *g, int simType) {
     Cdtds = 1.0; /* Courant number, ideal at 1 for 1D FDTD */
 
     TotalEnergy = 0.0; // start with no energy in the system
-    ThresholdEnergy = 1e-6; // stop when energy has decayed by 60 dB
+    ThresholdEnergy = 1e-5; // stop when energy has decayed by 60 dB
     PeakEnergy = 0.0; // track the peak energy level
     PeakReached = 0; // flag to indicate if peak energy has been reached
 
@@ -22,22 +22,34 @@ void gridInit(Grid *g, int simType) {
     ALLOC_1D(g->chye, SizeX - 1, double);
 
     for (mm = 0; mm < SizeX; mm++) {
-        if (mm < LOSS_LAYER || !simType) {
+        if (mm < LOSS_LAYER_1 || !simType) {
             Ceze(mm) = 1.0;
             Cezh(mm) = imp0 / L1_EPSR;
+        } else if (mm < LOSS_LAYER_2 || !simType) {
+            Ceze(mm) = (1.0 - LOSS_1) / (1.0 + LOSS_1);
+            Cezh(mm) = imp0 / L1_EPSR / (1.0 + LOSS_1);
+        } else if (mm < LOSS_LAYER_3 || !simType) {
+            Ceze(mm) = (1.0 - LOSS_2) / (1.0 + LOSS_2);
+            Cezh(mm) = imp0 / L2_EPSR / (1.0 + LOSS_2);
         } else {
-            Ceze(mm) = (1.0 - LOSS) / (1.0 + LOSS);
-            Cezh(mm) = imp0 / L1_EPSR / (1.0 + LOSS);
+            Ceze(mm) = (1.0 - LOSS_3) / (1.0 + LOSS_3);
+            Cezh(mm) = imp0 / L3_EPSR / (1.0 + LOSS_3);
         }
     }
 
     for (mm = 0; mm < SizeX - 1; mm++) {
-        if (mm < LOSS_LAYER || !simType) {
+        if (mm < LOSS_LAYER_1 || !simType) {
             Chyh(mm) = 1.0;
             Chye(mm) = 1.0 / imp0;
+        } else if (mm < LOSS_LAYER_2 || !simType) {
+            Chyh(mm) = (1.0 - LOSS_1) / (1.0 + LOSS_1);
+            Chye(mm) = 1.0 / imp0 / (1.0 + LOSS_1);
+        } else if (mm < LOSS_LAYER_3 || !simType) {
+            Chyh(mm) = (1.0 - LOSS_2) / (1.0 + LOSS_2);
+            Chye(mm) = 1.0 / imp0 / (1.0 + LOSS_2);
         } else {
-            Chyh(mm) = (1.0 - LOSS) / (1.0 + LOSS);
-            Chye(mm) = 1.0 / imp0 / (1.0 + LOSS);
+            Chyh(mm) = (1.0 - LOSS_3) / (1.0 + LOSS_3);
+            Chye(mm) = 1.0 / imp0 / (1.0 + LOSS_3);
         }
     }
 

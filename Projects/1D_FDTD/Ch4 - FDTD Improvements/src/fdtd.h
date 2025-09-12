@@ -12,10 +12,16 @@
 #define C0 299792458.0 // Speed of light in vacuum (m/s)
 
 /* Simulation Space Parameters */
-#define LOSS 0.0253146
-#define LOSS_LAYER 100
+#define LOSS_1 0.01 
+#define LOSS_2 0.001
+#define LOSS_3 0.02
+#define LOSS_LAYER_1 100
+#define LOSS_LAYER_2 103
+#define LOSS_LAYER_3 111
 #define L0_EPSR 1.0
-#define L1_EPSR 4.0
+#define L1_EPSR 9.0
+#define L2_EPSR 4.0
+#define L3_EPSR 2.0
 
 struct Grid {
     double *ez, *ceze, *cezh;

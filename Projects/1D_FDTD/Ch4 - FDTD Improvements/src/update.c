@@ -25,10 +25,14 @@ void updateE(Grid *g) {
                  Cezh(mm) * (Hy(mm) - Hy(mm - 1));
 
         /* Track total energy in the system*/
-        if (mm < LOSS_LAYER) {
+        if (mm < LOSS_LAYER_1) {
             TotalEnergy += 0.5 * EPS0 * L0_EPSR * Ez(mm) * Ez(mm);
-        } else if (mm >= LOSS_LAYER) {
+        } else if (mm < LOSS_LAYER_2) {
             TotalEnergy += 0.5 * EPS0 * L1_EPSR * Ez(mm) * Ez(mm);
+        } else if (mm < LOSS_LAYER_3) {
+            TotalEnergy += 0.5 * EPS0 * L2_EPSR * Ez(mm) * Ez(mm);
+        } else {
+            TotalEnergy += 0.5 * EPS0 * L3_EPSR * Ez(mm) * Ez(mm);
         }
     }
 
