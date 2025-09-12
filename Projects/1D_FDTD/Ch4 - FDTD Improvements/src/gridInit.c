@@ -1,16 +1,18 @@
 #include "fdtd.h"
 
-#define LOSS 0.0253146
-#define LOSS_LAYER 100
-#define EPSR 4.0
-
 void gridInit(Grid *g, int simType) {
-    double imp0 = 377.0;
+    double imp0 = sqrt(MU0 / EPS0);
     int mm;
 
     SizeX = 200;
     MaxTime = 450;
-    Cdtds = 1.0; /* Courant number*/
+    Cdtds = 1.0; /* Courant number, ideal at 1 for 1D FDTD */
+
+    TotalEnergy = 0.0; // start with no energy in the system
+    ThresholdEnergy = 1e-6; // stop when energy has decayed by 60 dB
+    PeakEnergy = 0.0; // track the peak energy level
+    PeakReached = 0; // flag to indicate if peak energy has been reached
+
 
     ALLOC_1D(g->ez, SizeX, double);
     ALLOC_1D(g->ceze, SizeX, double);
@@ -22,10 +24,10 @@ void gridInit(Grid *g, int simType) {
     for (mm = 0; mm < SizeX; mm++) {
         if (mm < LOSS_LAYER || !simType) {
             Ceze(mm) = 1.0;
-            Cezh(mm) = imp0 / EPSR;
+            Cezh(mm) = imp0 / L1_EPSR;
         } else {
             Ceze(mm) = (1.0 - LOSS) / (1.0 + LOSS);
-            Cezh(mm) = imp0 / EPSR / (1.0 + LOSS);
+            Cezh(mm) = imp0 / L1_EPSR / (1.0 + LOSS);
         }
     }
 

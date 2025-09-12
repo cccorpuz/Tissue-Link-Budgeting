@@ -5,8 +5,9 @@
 static int tfsfBoundary = 0; /* location of tfsf boundary */
 
 void tfsfInit(Grid *g) {
-    printf("Enter location of tfsf boundary: ");
-    scanf("%d", &tfsfBoundary);
+    // printf("Enter location of tfsf boundary: ");
+    // scanf("%d", &tfsfBoundary);
+    tfsfBoundary = 1; /* hardcoded for simplicity */
 
     ezIncInit(g);
 
