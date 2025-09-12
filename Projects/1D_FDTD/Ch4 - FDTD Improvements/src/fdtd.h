@@ -30,7 +30,7 @@ struct Grid {
     int time, maxTime;
     double dt;
     double cdtds;
-    double totalEnergy, thresholdEnergy, peakEnergy;
+    double totalEnergy, thresholdEnergy, peakEnergy, lastEnergy;
     int peakReached;
 };
 

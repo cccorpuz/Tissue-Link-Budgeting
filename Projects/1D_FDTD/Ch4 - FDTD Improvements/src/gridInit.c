@@ -9,9 +9,10 @@ void gridInit(Grid *g, int simType) {
     Cdtds = 1.0; /* Courant number, ideal at 1 for 1D FDTD */
 
     TotalEnergy = 0.0; // start with no energy in the system
-    ThresholdEnergy = 1e-5; // stop when energy has decayed by 60 dB
+    ThresholdEnergy = 1e-5;// stop when energy has decayed by 50 dB
     PeakEnergy = 0.0; // track the peak energy level
     PeakReached = 0; // flag to indicate if peak energy has been reached
+    LastEnergy = 0.0; // track energy from last timestep
 
 
     ALLOC_1D(g->ez, SizeX, double);

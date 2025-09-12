@@ -23,6 +23,7 @@
             Time = 0;
         }
         do {
+            // LastEnergy = TotalEnergy;
             updateH(g);
             tfsfUpdate(g); 
             abc(g); // TODO: improve from basic ABC to higher order ABC
@@ -40,9 +41,10 @@
             if (difftime(current_print_time, last_print_time) >= 4.0 || Time == 1 || TotalEnergy / PeakEnergy < ThresholdEnergy) {
                 printf("[\t%.1fs\t] Timestep:\t %d\t|| Energy: ~%.2e (%.2e dB)\n", 
                     difftime(current_print_time,start_time), Time, TotalEnergy, 10*log10(TotalEnergy/PeakEnergy));
+                // printf("%.e\n", LastEnergy - TotalEnergy);
                 last_print_time = current_print_time;
             }
-        } while (TotalEnergy / PeakEnergy > ThresholdEnergy || !PeakReached);
+        } while ( (TotalEnergy / PeakEnergy > ThresholdEnergy /*|| abs(LastEnergy - TotalEnergy) >  1e-30*/) || !PeakReached);
         printf("Simulation %d complete. Total time: %.1fs\n", simNum, difftime(time(NULL), start_time));
         free(g);
     }
