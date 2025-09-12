@@ -21,35 +21,47 @@ void gridInit(Grid *g, int simType) {
     ALLOC_1D(g->chyh, SizeX - 1, double);
     ALLOC_1D(g->chye, SizeX - 1, double);
 
-    for (mm = 0; mm < SizeX; mm++) {
-        if (mm < LOSS_LAYER_1 || !simType) {
+    if (!simType) {
+        // Uniform grid: all coefficients set to first region
+        for (mm = 0; mm < SizeX; mm++) {
             Ceze(mm) = 1.0;
-            Cezh(mm) = imp0 / L1_EPSR;
-        } else if (mm < LOSS_LAYER_2 || !simType) {
-            Ceze(mm) = (1.0 - LOSS_1) / (1.0 + LOSS_1);
-            Cezh(mm) = imp0 / L1_EPSR / (1.0 + LOSS_1);
-        } else if (mm < LOSS_LAYER_3 || !simType) {
-            Ceze(mm) = (1.0 - LOSS_2) / (1.0 + LOSS_2);
-            Cezh(mm) = imp0 / L2_EPSR / (1.0 + LOSS_2);
-        } else {
-            Ceze(mm) = (1.0 - LOSS_3) / (1.0 + LOSS_3);
-            Cezh(mm) = imp0 / L3_EPSR / (1.0 + LOSS_3);
+            Cezh(mm) = imp0 / L0_EPSR;
         }
-    }
-
-    for (mm = 0; mm < SizeX - 1; mm++) {
-        if (mm < LOSS_LAYER_1 || !simType) {
+        for (mm = 0; mm < SizeX - 1; mm++) {
             Chyh(mm) = 1.0;
             Chye(mm) = 1.0 / imp0;
-        } else if (mm < LOSS_LAYER_2 || !simType) {
-            Chyh(mm) = (1.0 - LOSS_1) / (1.0 + LOSS_1);
-            Chye(mm) = 1.0 / imp0 / (1.0 + LOSS_1);
-        } else if (mm < LOSS_LAYER_3 || !simType) {
-            Chyh(mm) = (1.0 - LOSS_2) / (1.0 + LOSS_2);
-            Chye(mm) = 1.0 / imp0 / (1.0 + LOSS_2);
-        } else {
-            Chyh(mm) = (1.0 - LOSS_3) / (1.0 + LOSS_3);
-            Chye(mm) = 1.0 / imp0 / (1.0 + LOSS_3);
+        }
+    } else {
+        // Multi-region grid
+        for (mm = 0; mm < SizeX; mm++) {
+            if (mm < LOSS_LAYER_1) {
+                Ceze(mm) = 1.0;
+                Cezh(mm) = imp0 / L0_EPSR;
+            } else if (mm < LOSS_LAYER_2) {
+                Ceze(mm) = (1.0 - LOSS_1) / (1.0 + LOSS_1);
+                Cezh(mm) = imp0 / L1_EPSR / (1.0 + LOSS_1);
+            } else if (mm < LOSS_LAYER_3) {
+                Ceze(mm) = (1.0 - LOSS_2) / (1.0 + LOSS_2);
+                Cezh(mm) = imp0 / L2_EPSR / (1.0 + LOSS_2);
+            } else {
+                Ceze(mm) = (1.0 - LOSS_3) / (1.0 + LOSS_3);
+                Cezh(mm) = imp0 / L3_EPSR / (1.0 + LOSS_3);
+            }
+        }
+        for (mm = 0; mm < SizeX - 1; mm++) {
+            if (mm < LOSS_LAYER_1) {
+                Chyh(mm) = 1.0;
+                Chye(mm) = 1.0 / imp0;
+            } else if (mm < LOSS_LAYER_2) {
+                Chyh(mm) = (1.0 - LOSS_1) / (1.0 + LOSS_1);
+                Chye(mm) = 1.0 / imp0 / (1.0 + LOSS_1);
+            } else if (mm < LOSS_LAYER_3) {
+                Chyh(mm) = (1.0 - LOSS_2) / (1.0 + LOSS_2);
+                Chye(mm) = 1.0 / imp0 / (1.0 + LOSS_2);
+            } else {
+                Chyh(mm) = (1.0 - LOSS_3) / (1.0 + LOSS_3);
+                Chye(mm) = 1.0 / imp0 / (1.0 + LOSS_3);
+            }
         }
     }
 
