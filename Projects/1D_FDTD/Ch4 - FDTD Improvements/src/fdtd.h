@@ -74,6 +74,7 @@ void gridInit(Grid *g, int simNum);
 
 void snapshotInit(Grid *g);
 void snapshot(Grid *g, int simNum);
+void timestepOut(Grid *g);
 
 void tfsfInit(Grid *g);
 void tfsfUpdate(Grid *g);

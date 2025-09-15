@@ -17,6 +17,19 @@ void ezIncInit(Grid *g) {
     printf("Courant number: \t\t%.3lf\n", cdtds);
 
     ppw = C0 / (fp * xres);
+    if (ppw <= 30.0) {
+        xres = C0 / (fp * 30.0);
+        printf("Warning: for accuracy, points per wavelength should be >= 10.\n");
+        printf(" Setting spatial resolution to %.3e meters (%.2lf points per wavelength).\n", xres, ppw);
+        ppw = 30.0;
+    }
+
+    if (ppw > 30.0) {
+        printf("Warning: for efficiency, points per wavelength should be <= 20.\n");
+        printf(" Current value is %.2lf points per wavelength.\n", ppw);
+        ppw = 40.0;
+        xres = C0 / (fp * ppw);
+    }
     printf("Points per wavelength: \t\t%.3lf\n", ppw);
 
     printf("X-Grid Resolution (dx): \t%.3e meters\n", xres);
@@ -24,6 +37,7 @@ void ezIncInit(Grid *g) {
     Dt = cdtds * xres / C0;
     printf("Time Step (dt): \t\t%.3e seconds\n", Dt); 
 
+    timestepOut(g);
     return;
 }
 

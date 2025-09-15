@@ -56,3 +56,14 @@ void snapshot(Grid *g, int simNum) {
 
     return;
 }
+
+void timestepOut(Grid *g) {
+    FILE *dtFile = fopen("dt.txt", "w");
+    if (dtFile) {
+        fprintf(dtFile, "%g\n", g->dt);
+        fclose(dtFile);
+    } else {
+        fprintf(stderr, "Error opening dt_output.txt for writing\n");
+    }
+    return;
+}
