@@ -1,6 +1,6 @@
 import numpy as np
-
 import matplotlib.pyplot as plt
+
 
 # Load the first column from each CSV file
 data0 = np.loadtxt('sim_output0.csv', delimiter=',')[:, 50]
@@ -73,7 +73,7 @@ plt.savefig('fft_magnitudes.png')
 plt.close()
 
 # Compute S11 (ratio of reflected to incident)
-S11 = 20 * np.log10(np.abs(fft1 / fft0))
+S11 = 20 * np.log10(np.abs(fft0) / np.abs(fft1))
 
 # Plot magnitude of S11 (masking invalid regions) and limit max frequency to 24 GHz
 max_freq = 18e9  # 24 GHz

@@ -4,6 +4,7 @@
 #include "fdtd.h"
 
 void ezIncInit(Grid *g);
+void ezIncUpdate(Grid *g);
 double ezInc(double time, double location);
 
 #endif

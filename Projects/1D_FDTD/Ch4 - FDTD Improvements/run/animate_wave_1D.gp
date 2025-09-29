@@ -17,10 +17,10 @@ stats 'sim_output1.csv' nooutput
 
 do for [i=0:STATS_records-1] {
     unset arrow
-    # Draw vertical lines at positions 100, 103, and 111
+    # Draw vertical lines at positions 100, 110, and 115
     set arrow from 100, graph 0 to 100, graph 1 nohead lc rgb "red" lw 2
-    set arrow from 103, graph 0 to 103, graph 1 nohead lc rgb "blue" lw 2
-    set arrow from 111, graph 0 to 111, graph 1 nohead lc rgb "green" lw 2
+    set arrow from 110, graph 0 to 110, graph 1 nohead lc rgb "blue" lw 2
+    #set arrow from 115, graph 0 to 115, graph 1 nohead lc rgb "green" lw 2
     plot '<awk -F, "NR==' . (i+1) . '{for(j=1;j<=NF;j++) print j,$j}" sim_output1.csv' using 1:2 with lines title sprintf("Frame %d", i+1)
 }
 

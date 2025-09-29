@@ -12,13 +12,16 @@
     gridInit(g,0);
     abcInit(g);
     tfsfInit(g);
+    gridPropertyInit(g,0);
     snapshotInit(g);  
     for (int simNum = 0; simNum < 2; simNum++) {
         time_t start_time = time(NULL), last_print_time = time(NULL), current_print_time = time(NULL);
         if (simNum) {
             // Reset
+            free(g);
             ALLOC_1D(g, 1, Grid); 
-            gridInit(g,1);
+            gridInit(g, simNum);
+            gridPropertyInit(g, simNum);
             abcInit(g);
             Time = 0;
         }
@@ -44,9 +47,9 @@
                 // printf("%.e\n", LastEnergy - TotalEnergy);
                 last_print_time = current_print_time;
             }
-        } while ( (TotalEnergy / PeakEnergy > ThresholdEnergy /*|| abs(LastEnergy - TotalEnergy) >  1e-30*/) || !PeakReached);
+
+        } while ( (TotalEnergy / PeakEnergy > ThresholdEnergy || abs(LastEnergy - TotalEnergy) >  1e-30) || !PeakReached);
         printf("Simulation %d complete. Total time: %.1fs\n", simNum, difftime(time(NULL), start_time));
-        free(g);
     }
     
     return 0;
